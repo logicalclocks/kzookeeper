@@ -1,0 +1,4 @@
+dependencies:
+  - recipe: kzookeeper::install
+
+
