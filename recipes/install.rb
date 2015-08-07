@@ -60,7 +60,7 @@ end
 include_recipe "zookeeper::config_render"
 
 
-zk_ip = private_cookbook_ip("kzookeeper")
+zk_ip = private_recipe_ip("kzookeeper", "default")
 
 
 template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-start.sh" do
