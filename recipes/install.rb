@@ -56,7 +56,7 @@ include_recipe 'build-essential::default'
 include_recipe 'java::default'
 
 zookeeper node[:zookeeper][:version] do
-  user        node[:zookeeper][:user]
+  user        node[:kzookeeper][:user]
   mirror      node[:zookeeper][:mirror]
   checksum    node[:zookeeper][:checksum]
   install_dir node[:zookeeper][:install_dir]
@@ -73,23 +73,23 @@ zk_ip = private_cookbook_ip("zookeeper")
 
 template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-start.sh" do
   source "zookeeper-start.sh.erb"
-  owner node[:zookeeper][:user]
-  group node[:zookeeper][:user]
+  owner node[:kzookeeper][:user]
+  group node[:kzookeeper][:user]
   mode 0770
   variables({ :zk_ip => zk_ip })
 end
 
 template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-stop.sh" do
   source "zookeeper-stop.sh.erb"
-  owner node[:zookeeper][:user]
-  group node[:zookeeper][:user]
+  owner node[:kzookeeper][:user]
+  group node[:kzookeeper][:user]
   mode 0770
 end
 
 
 directory "#{node[:zookeeper][:base_dir]}/data" do
-  owner node[:zookeeper][:user]
-  group node[:zookeeper][:group]
+  owner node[:kzookeeper][:user]
+  group node[:kzookeeper][:group]
   mode "755"
   action :create
   recursive true
@@ -107,7 +107,7 @@ config_hash = {
 
 zookeeper_config "/opt/zookeeper/zookeeper-#{node[:zookeeper][:version]}/conf/zoo.cfg" do
   config config_hash
-  user   'zookeeper'
+  user   node[:kzookeeper][:user]
   action :render
 end
 
@@ -118,13 +118,14 @@ end
 
 template '/etc/default/zookeeper' do
   source 'environment-defaults.erb'
-  owner 'zookeeper'
-  group 'zookeeper'
+  owner node[:kzookeeper][:user]
+  group node[:kzookeeper][:group]
   action :create
   mode '0644'
   cookbook 'zookeeper'
   notifies :restart, 'service[zookeeper]', :delayed
 end
+
 template '/etc/init.d/zookeeper' do
   source 'zookeeper.initd.erb'
   owner 'root'
@@ -133,6 +134,7 @@ template '/etc/init.d/zookeeper' do
   mode '0755'
   notifies :restart, 'service[zookeeper]', :delayed
 end
+
 service 'zookeeper' do
   supports :status => true, :restart => true, :reload => true
   action :enable

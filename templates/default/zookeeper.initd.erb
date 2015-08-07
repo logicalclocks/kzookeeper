@@ -1,21 +1,21 @@
 #!/bin/sh
 #
-# Startup script for kzookeeper
+# Startup script for zookeeper
 #
 ### BEGIN INIT INFO
-# Provides:                     kzookeeper*
+# Provides:                     zookeeper*
 # Required-Start:                 
 # Should-Start:                 
 # Required-Stop:                  
 # Default-Start:                2 3 4 5
 # Default-Stop:                 0 1 6
-# Short-Description:            start and stop kzookeeper*
-# Description:                  Start/Stop/Restart Zookeeper Node: kzookeeper*
+# Short-Description:            start and stop zookeeper*
+# Description:                  Start/Stop/Restart Zookeeper Node: zookeeper*
 ### END INIT INFO
 
 # Variables
-START_PROG=<%=su -c "#{node[:zookeeper][:base_dir]}/bin/zookeeper-start.sh" node[:zookeeper][:user] %>
-STOP_PROG=<%= su -c "#{node[:zookeeper][:base_dir]}/bin/zookeeper-stop.sh" node[:zookeeper][:user]  %>
+START_PROG="su -c \"<%= node[:zookeeper][:base_dir] %>/bin/zookeeper-start.sh\" <%= node[:kzookeeper][:user] %>"
+STOP_PROG="su -c \"<%= node[:zookeeper][:base_dir] %>/bin/zookeeper-stop.sh\" <%= node[:kzookeeper][:user] %>"
 
 RETVAL=0
 
