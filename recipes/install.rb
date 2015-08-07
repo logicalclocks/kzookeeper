@@ -44,6 +44,8 @@ end
 
 # Pre-Experiment Code
 
+require 'json'
+
 include_recipe 'build-essential::default'
 include_recipe 'java::default'
 
@@ -56,12 +58,9 @@ zookeeper node[:zookeeper][:version] do
   action      :install
 end
 
-
-include_recipe "zookeeper::config_render"
-
-
 zk_ip = private_recipe_ip("kzookeeper", "default")
 
+include_recipe "zookeeper::config_render"
 
 template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-start.sh" do
   source "zookeeper-start.sh.erb"
@@ -99,22 +98,24 @@ config_hash = {
   clientPort: 2181, 
   dataDir: "#{node[:zookeeper][:base_dir]}/data", 
   tickTime: 2000,
+  syncLimit: 3,
+  initLimit: 60,
   autopurge: {
     snapRetainCount: 1,
     purgeInterval: 1
   }
 }
 
+
+node[:kzookeeper][:default][:private_ips].each_with_index do |ipaddress, index|
+config_hash["server#{index}"]="#{ipaddress}:2888:3888"
+end
+
 zookeeper_config "/opt/zookeeper/zookeeper-#{node[:zookeeper][:version]}/conf/zoo.cfg" do
   config config_hash
   user   node[:kzookeeper][:user]
   action :render
 end
-
-# zookeeper_node "/kafka" do
-#   connect_str "#{zk_ip}:2181"
-#   data "some data"
-# end
 
 template '/etc/default/zookeeper' do
   source 'environment-defaults.erb'
@@ -142,5 +143,3 @@ end
 
 
 # Configuration Files
-
-

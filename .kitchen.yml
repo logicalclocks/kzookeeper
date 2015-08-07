@@ -21,15 +21,9 @@ suites:
 
     attributes:
          kzookeeper:
-            experiment:
+            default:
                 private_ips: ["10.0.2.15"]
                 public_ips: ["10.0.2.15"]
-            private_ips: ["10.0.2.15"]
-            public_ips: ["10.0.2.15"]
-         zookeeper:
-            private_ips: ["10.0.2.15"]
-            public_ips: ["10.0.2.15"]
-         kagent:
             private_ips: ["10.0.2.15"]
             public_ips: ["10.0.2.15"]
          private_ips: ["10.0.2.15"]
