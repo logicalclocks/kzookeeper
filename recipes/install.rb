@@ -48,24 +48,39 @@ end
 
 # Pre-Experiment Code
 
-node.default[:zookeeper][:use_java_cookbook] = true
+# node.default[:zookeeper][:use_java_cookbook] = true
 
-#include_recipe "zookeeper"
 #include_recipe "zookeeper::service"
+
+
+zookeeper node[:zookeeper][:version] do
+  user        node[:zookeeper][:user]
+  mirror      node[:zookeeper][:mirror]
+  checksum    node[:zookeeper][:checksum]
+  install_dir node[:zookeeper][:install_dir]
+  data_dir    node[:zookeeper][:config][:dataDir]
+  action      :install
+end
+
+
+include_recipe 'build-essential::default'
+include_recipe 'java::default'
+include_recipe "zookeeper::config_render"
+
 
 zk_ip = private_cookbook_ip("zookeeper")
 
 
-template "#{node[:zookeeper][:base_dir]}/start-zookeeper.sh" do
-  source "start-zookeeper.erb"
+template "#{node[:zookeeper][:base_dir]}/zookeeper-start.sh" do
+  source "zookeeper-start.sh.erb"
   owner node[:zookeeper][:user]
   group node[:zookeeper][:user]
   mode 0655
   variables({ :zk_ip => zk_ip })
 end
 
-template "#{node[:zookeeper][:base_dir]}/stop-zookeeper.sh" do
-  source "stop-zookeeper.erb"
+template "#{node[:zookeeper][:base_dir]}/zookeeper-stop.sh" do
+  source "zookeeper-stop.sh.erb"
   owner node[:zookeeper][:user]
   group node[:zookeeper][:user]
   mode 0655
@@ -80,7 +95,6 @@ directory "#{node[:zookeeper][:base_dir]}/data" do
   recursive true
 end
 
-
 config_hash = {
   clientPort: 2181, 
   dataDir: "#{node[:zookeeper][:base_dir]}/data", 
@@ -91,18 +105,39 @@ config_hash = {
   }
 }
 
-zookeeper_config '/opt/zookeeper/zookeeper-#{node[:zookeeper][:version]}/conf/zoo.cfg' do
+zookeeper_config "/opt/zookeeper/zookeeper-#{node[:zookeeper][:version]}/conf/zoo.cfg" do
   config config_hash
   user   'zookeeper'
   action :render
 end
 
+# zookeeper_node "/kafka" do
+#   connect_str "#{zk_ip}:2181"
+#   data "some data"
+# end
 
+  template '/etc/default/zookeeper' do
+    source 'environment-defaults.erb'
+    owner 'zookeeper'
+    group 'zookeeper'
+    action :create
+    mode '0644'
+    cookbook 'zookeeper'
+    notifies :restart, 'service[zookeeper]', :delayed
+  end
+  template '/etc/init.d/zookeeper' do
+    source 'zookeeper.initd.erb'
+    owner 'root'
+    group 'root'
+    action :create
+    mode '0755'
+    notifies :restart, 'service[zookeeper]', :delayed
+  end
+  service 'zookeeper' do
+    supports :status => true, :restart => true, :reload => true
+    action :enable
+  end
 
-zookeeper_node "/kafka" do
-  connect_str "#{zk_ip}:2181"
-  data "some data"
-end
 
 # Configuration Files
 

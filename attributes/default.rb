@@ -1,3 +1,5 @@
+include_attribute "zookeeper"
+
 default[:kzookeeper][:url] = ""
 default[:kzookeeper][:version] = "0.1"
 default[:kzookeeper][:user] = "zookeeper"
