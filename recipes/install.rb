@@ -41,16 +41,8 @@ end
 #   not_if { ::File.exists?( "#{node[:kzookeeper][:version_dir]}/.installed" ) }
 # end
 
-#my_private_ip= my_private_ip()
-#my_public_ip= my_public_ip()
-
-
 
 # Pre-Experiment Code
-
-# node.default[:zookeeper][:use_java_cookbook] = true
-
-#include_recipe "zookeeper::service"
 
 include_recipe 'build-essential::default'
 include_recipe 'java::default'
@@ -68,7 +60,7 @@ end
 include_recipe "zookeeper::config_render"
 
 
-zk_ip = private_cookbook_ip("zookeeper")
+zk_ip = private_cookbook_ip("kzookeeper")
 
 
 template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-start.sh" do
