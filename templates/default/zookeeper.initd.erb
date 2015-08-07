@@ -14,8 +14,8 @@
 ### END INIT INFO
 
 # Variables
-START_PROG=<%= "#{node[:zookeeper][:install_dir]}/bin/zookeeper-start.sh" %>
-STOP_PROG=<%= "#{node[:zookeeper][:install_dir]}/bin/zookeeper-stop.sh" %>
+START_PROG=<%=su -c "#{node[:zookeeper][:base_dir]}/bin/zookeeper-start.sh" node[:zookeeper][:user] %>
+STOP_PROG=<%= su -c "#{node[:zookeeper][:base_dir]}/bin/zookeeper-stop.sh" node[:zookeeper][:user]  %>
 
 RETVAL=0
 

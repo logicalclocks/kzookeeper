@@ -52,6 +52,8 @@ end
 
 #include_recipe "zookeeper::service"
 
+include_recipe 'build-essential::default'
+include_recipe 'java::default'
 
 zookeeper node[:zookeeper][:version] do
   user        node[:zookeeper][:user]
@@ -63,27 +65,25 @@ zookeeper node[:zookeeper][:version] do
 end
 
 
-include_recipe 'build-essential::default'
-include_recipe 'java::default'
 include_recipe "zookeeper::config_render"
 
 
 zk_ip = private_cookbook_ip("zookeeper")
 
 
-template "#{node[:zookeeper][:base_dir]}/zookeeper-start.sh" do
+template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-start.sh" do
   source "zookeeper-start.sh.erb"
   owner node[:zookeeper][:user]
   group node[:zookeeper][:user]
-  mode 0655
+  mode 0770
   variables({ :zk_ip => zk_ip })
 end
 
-template "#{node[:zookeeper][:base_dir]}/zookeeper-stop.sh" do
+template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-stop.sh" do
   source "zookeeper-stop.sh.erb"
   owner node[:zookeeper][:user]
   group node[:zookeeper][:user]
-  mode 0655
+  mode 0770
 end
 
 
@@ -116,27 +116,27 @@ end
 #   data "some data"
 # end
 
-  template '/etc/default/zookeeper' do
-    source 'environment-defaults.erb'
-    owner 'zookeeper'
-    group 'zookeeper'
-    action :create
-    mode '0644'
-    cookbook 'zookeeper'
-    notifies :restart, 'service[zookeeper]', :delayed
-  end
-  template '/etc/init.d/zookeeper' do
-    source 'zookeeper.initd.erb'
-    owner 'root'
-    group 'root'
-    action :create
-    mode '0755'
-    notifies :restart, 'service[zookeeper]', :delayed
-  end
-  service 'zookeeper' do
-    supports :status => true, :restart => true, :reload => true
-    action :enable
-  end
+template '/etc/default/zookeeper' do
+  source 'environment-defaults.erb'
+  owner 'zookeeper'
+  group 'zookeeper'
+  action :create
+  mode '0644'
+  cookbook 'zookeeper'
+  notifies :restart, 'service[zookeeper]', :delayed
+end
+template '/etc/init.d/zookeeper' do
+  source 'zookeeper.initd.erb'
+  owner 'root'
+  group 'root'
+  action :create
+  mode '0755'
+  notifies :restart, 'service[zookeeper]', :delayed
+end
+service 'zookeeper' do
+  supports :status => true, :restart => true, :reload => true
+  action :enable
+end
 
 
 # Configuration Files
