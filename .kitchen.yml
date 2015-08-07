@@ -18,7 +18,6 @@ suites:
     run_list:
       - recipe[kagent::install]
       - recipe[kzookeeper::install]
-      - recipe[kzookeeper::experiment]
 
     attributes:
          kzookeeper:
