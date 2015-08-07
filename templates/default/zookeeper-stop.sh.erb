@@ -1,6 +1,8 @@
 #!/bin/bash
 
-PID =`cat /tmp/zookeeper.pid`
-kill $PID
-sleep 2
-kill -9 $PID &> /dev/null
+
+./bin/zkServer.sh stop
+# PID =`cat /tmp/zookeeper.pid`
+# kill $PID
+# sleep 2
+# kill -9 $PID &> /dev/null

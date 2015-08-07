@@ -1,6 +1,5 @@
 #!/bin/bash
 
 cd <%= node[:zookeeper][:base_dir] %>
-nohup ./bin/zkCli.sh -server <%= @zk_ip %>:2181 > <%= node[:zookeeper][:base_dir] %>/log/zk.logs &
-echo $! > /tmp/zookeeper.pid
+./bin/zkServer.sh start 
 
