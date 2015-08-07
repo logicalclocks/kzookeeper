@@ -77,15 +77,6 @@ template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-stop.sh" do
   mode 0770
 end
 
-directory "#{node[:zookeeper][:base_dir]}/log" do
-  owner node[:kzookeeper][:user]
-  group node[:kzookeeper][:group]
-  mode "755"
-  action :create
-  recursive true
-end
-
-
 directory "#{node[:zookeeper][:base_dir]}/data" do
   owner node[:kzookeeper][:user]
   group node[:kzookeeper][:group]
