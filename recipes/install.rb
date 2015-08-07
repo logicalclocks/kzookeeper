@@ -47,6 +47,9 @@ end
 
 
 # Pre-Experiment Code
+
+node.default[:zookeeper][:use_java_cookbook] = true
+
 include_recipe "zookeeper"
 include_recipe "zookeeper::service"
 

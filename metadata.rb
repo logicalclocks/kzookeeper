@@ -8,7 +8,8 @@ version          "0.1"
 recipe            "kzookeeper::install", "Experiment setup for kzookeeper"
 
 
-
+depends 'zookeeper'
+depends 'java'
 
 %w{ ubuntu debian rhel centos }.each do |os|
   supports os
