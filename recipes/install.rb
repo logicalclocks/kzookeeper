@@ -49,7 +49,9 @@ end
 # Pre-Experiment Code
 include_recipe "zookeeper"
 include_recipe "zookeeper::service"
+
 zk_ip = private_cookbook_ip("zookeeper")
+
 zookeeper_node "/kafka" do
   connect_str "#{zk_ip}:2181"
   data "some data"
