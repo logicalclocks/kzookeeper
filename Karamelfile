@@ -1,4 +1,5 @@
 dependencies:
   - recipe: kzookeeper::install
-
-
+  - recipe: kzookeeper::default
+    local:
+      - kzookeeper::install
