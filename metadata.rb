@@ -8,6 +8,7 @@ version          "0.1"
 recipe            "kzookeeper::install", "Experiment setup for kzookeeper"
 
 
+depends 'kagent'
 depends 'zookeeper'
 depends 'java'
 
