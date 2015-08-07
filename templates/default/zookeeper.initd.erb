@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# Startup script for kzookeeper
+#
+### BEGIN INIT INFO
+# Provides:                     kzookeeper*
+# Required-Start:                 
+# Should-Start:                 
+# Required-Stop:                  
+# Default-Start:                2 3 4 5
+# Default-Stop:                 0 1 6
+# Short-Description:            start and stop kzookeeper*
+# Description:                  Start/Stop/Restart Zookeeper Node: kzookeeper*
+### END INIT INFO
+
+# Variables
+START_PROG=<%= "#{node[:zookeeper][:install_dir]}/bin/zookeeper-start.sh" %>
+STOP_PROG=<%= "#{node[:zookeeper][:install_dir]}/bin/zookeeper-stop.sh" %>
+
+RETVAL=0
+
+start() {
+  echo "Executing : $START_PROG"
+  $START_PROG
+  return $?
+}
+
+stop() {
+  echo "Executing : $STOP_PROG"
+  $STOP_PROG
+  return $?
+}
+
+restart() {
+  echo "Executing : $RESTART_PROG"
+  res = $STOP_PROG
+  if [ $res -ne 0 ] ; then
+    return $res
+  fi
+  $START_PROG
+  return $?
+}
+
+
+# user-supplied parameter to stop/start/restart process.
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  reload)
+    restart
+    ;;
+  -h|--help)
+    echo ""
+    echo "usage: <prog> start|stop|restart"
+    echo ""
+    exit 0
+    ;;
+  *)
+    echo $"Usage: <prog> {start|stop|restart}"
+    exit 1
+  esac
+
+
+exit $RETVAL
+

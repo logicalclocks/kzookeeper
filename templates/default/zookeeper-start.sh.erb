@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd <%= node[:zookeeper][:base_dir] %>
+./bin/zkCli.sh -server <%= @zk_ip %>:2181
+echo $! > /tmp/zookeeper.pid
+

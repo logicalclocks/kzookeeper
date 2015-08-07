@@ -50,10 +50,54 @@ end
 
 node.default[:zookeeper][:use_java_cookbook] = true
 
-include_recipe "zookeeper"
-include_recipe "zookeeper::service"
+#include_recipe "zookeeper"
+#include_recipe "zookeeper::service"
 
 zk_ip = private_cookbook_ip("zookeeper")
+
+
+template "#{node[:zookeeper][:base_dir]}/start-zookeeper.sh" do
+  source "start-zookeeper.erb"
+  owner node[:zookeeper][:user]
+  group node[:zookeeper][:user]
+  mode 0655
+  variables({ :zk_ip => zk_ip })
+end
+
+template "#{node[:zookeeper][:base_dir]}/stop-zookeeper.sh" do
+  source "stop-zookeeper.erb"
+  owner node[:zookeeper][:user]
+  group node[:zookeeper][:user]
+  mode 0655
+end
+
+
+directory "#{node[:zookeeper][:base_dir]}/data" do
+  owner node[:zookeeper][:user]
+  group node[:zookeeper][:group]
+  mode "755"
+  action :create
+  recursive true
+end
+
+
+config_hash = {
+  clientPort: 2181, 
+  dataDir: "#{node[:zookeeper][:base_dir]}/data", 
+  tickTime: 2000,
+  autopurge: {
+    snapRetainCount: 1,
+    purgeInterval: 1
+  }
+}
+
+zookeeper_config '/opt/zookeeper/zookeeper-#{node[:zookeeper][:version]}/conf/zoo.cfg' do
+  config config_hash
+  user   'zookeeper'
+  action :render
+end
+
+
 
 zookeeper_node "/kafka" do
   connect_str "#{zk_ip}:2181"
