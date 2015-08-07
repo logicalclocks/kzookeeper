@@ -6,3 +6,4 @@ source 'https://supermarket.chef.io'
 cookbook 'kagent', github: 'karamelchef/kagent-chef', branch: 'master'
 metadata
 
+cookbook 'zookeeper', github: 'SimpleFinance/chef-zookeeper', branch: 'master'
