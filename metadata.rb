@@ -6,7 +6,7 @@ description      'Installs/Configures/Runs kzookeeper'
 version          "0.1"
 
 recipe            "kzookeeper::install", "Experiment setup for kzookeeper"
-
+recipe            "kzookeeper::default",  "configFile=; default recipe to install zookeeper"
 
 depends 'kagent'
 depends 'zookeeper'
