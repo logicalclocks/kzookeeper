@@ -74,7 +74,8 @@ config_hash = {
 
 
 node[:kzookeeper][:default][:private_ips].each_with_index do |ipaddress, index|
-config_hash["server.#{index}"]="#{ipaddress}:2888:3888"
+id=index+1
+config_hash["server.#{id}"]="#{ipaddress}:2888:3888"
 end
 
 zookeeper_config "/opt/zookeeper/zookeeper-#{node[:zookeeper][:version]}/conf/zoo.cfg" do
