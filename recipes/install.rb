@@ -117,6 +117,7 @@ for zk in node[:kzookeeper][:default][:private_ips]
     found_id = id
   end
   id += 1
+
 end 
 Chef::Log.info "Found ID IS: #{found_id}"
 if found_id == -1
@@ -132,5 +133,17 @@ template "#{node[:zookeeper][:base_dir]}/data/myid" do
   action :create
   mode '0755'
   variables({ :id => found_id })
+  notifies :restart, 'service[zookeeper]', :delayed
+end
+
+list_zks=node[:kzookeeper][:default][:private_ips].join(",")
+
+template "#{node[:zookeeper][:base_dir]}/bin/zkConnect.sh" do
+  source 'zkClient.sh.erb'
+  owner node[:kzookeeper][:user]
+  group node[:kzookeeper][:group]
+  action :create
+  mode '0755'
+  variables({ :servers => list_zks })
   notifies :restart, 'service[zookeeper]', :delayed
 end
