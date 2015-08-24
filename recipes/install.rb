@@ -125,7 +125,7 @@ end
 
 
 
-template "#{node[:zookeeper][:base_dir]}/data/#{found_id}" do
+template "#{node[:zookeeper][:base_dir]}/data/myid" do
   source 'zookeeper.id.erb'
   owner node[:kzookeeper][:user]
   group node[:kzookeeper][:group]
