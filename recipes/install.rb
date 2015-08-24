@@ -17,31 +17,6 @@ group node[:kzookeeper][:group] do
 end
 
 
-# See ark resource here: https://github.com/burtlo/ark
-# It will: fetch it to to /var/cache/chef/
-# unpack it to the default path (/usr/local/XXX-1.2.3)
-# create a symlink for :home_dir (/usr/local/XXX) 
-# add /user/local/XXX/bin to the enviroment PATH variable
-#  ark 'kzookeeper' do
-#    url node[:kzookeeper][:url]
-#    version node[:kzookeeper][:version]
-#    path node[:kzookeeper][:version_dir]
-#    home_dir node[:kzookeeper][:home_dir]
-#    
-#    append_env_path true
-#    owner node[:kzookeeper][:user]
-#  end
-
-# bash "experiment_install_bash" do
-#     user "root"
-#     code <<-EOF
-# Do something here...
-# touch #{node[:kzookeeper][:version_dir]}/.installed
-# EOF
-#   not_if { ::File.exists?( "#{node[:kzookeeper][:version_dir]}/.installed" ) }
-# end
-
-
 # Pre-Experiment Code
 
 require 'json'
@@ -132,5 +107,30 @@ service 'zookeeper' do
   action :enable
 end
 
+found_id=-1
+id=0
+my_ip = my_private_ip()
 
-# Configuration Files
+for zk in node[:kzookeeper][:default][:private_ips]
+  if my_ip.eql? zk
+    Chef::Log.info "Found matching IP address in the list of zkd nodes: #{zk}. ID= #{id}"
+    found_id = id
+  end
+  id += 1
+end 
+Chef::Log.info "Found ID IS: #{found_id}"
+if found_id == -1
+  raise "Could not find matching IP address #{my_ip} in the list of zkd nodes: " + node[:kzookeeper][:default][:private_ips].join(",")
+end
+
+
+
+template "#{node[:zookeeper][:base_dir]}/data/#{found_id}" do
+  source 'zookeeper.id.erb'
+  owner node[:kzookeeper][:user]
+  group node[:kzookeeper][:group]
+  action :create
+  mode '0755'
+  variables({ :id => found_id })
+  notifies :restart, 'service[zookeeper]', :delayed
+end
