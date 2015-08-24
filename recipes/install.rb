@@ -103,7 +103,7 @@ template '/etc/init.d/zookeeper' do
 end
 
 service 'zookeeper' do
-  supports :status => true, :restart => true, :reload => true
+  supports :status => true, :restart => true, :reload => true, :start => true, :stop => true
   action :enable
 end
 
