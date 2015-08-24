@@ -108,7 +108,7 @@ service 'zookeeper' do
 end
 
 found_id=-1
-id=0
+id=1
 my_ip = my_private_ip()
 
 for zk in node[:kzookeeper][:default][:private_ips]
