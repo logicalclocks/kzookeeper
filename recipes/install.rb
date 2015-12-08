@@ -22,7 +22,7 @@ end
 require 'json'
 
 include_recipe 'build-essential::default'
-include_recipe 'java::default'
+include_recipe 'java'
 
 zookeeper node[:zookeeper][:version] do
   user        node[:kzookeeper][:user]
