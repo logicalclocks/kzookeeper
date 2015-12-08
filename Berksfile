@@ -8,4 +8,5 @@ metadata
 
 #cookbook 'zookeeper', github: 'SimpleFinance/chef-zookeeper', branch: 'master'
 cookbook 'zookeeper', github: 'biobankcloud/chef-zookeeper', branch: 'master'
-cookbook 'java'
+cookbook 'java', github: 'jimdowling/java'
+
