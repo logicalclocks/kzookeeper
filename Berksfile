@@ -7,4 +7,4 @@ cookbook 'kagent', github: 'karamelchef/kagent-chef', branch: 'master'
 metadata
 
 cookbook 'zookeeper', github: 'biobankcloud/chef-zookeeper', branch: 'master'
-cookbook 'java'
+cookbook 'java', github: 'jimdowling/java'
