@@ -43,7 +43,7 @@ require 'json'
 include_recipe 'build-essential::default'
 include_recipe 'java'
 
-kzookeeper node.zookeeper.version do
+kzookeeper_default node.zookeeper.version do
   user        node.kzookeeper.user
   mirror      node.zookeeper.mirror
   checksum    node.zookeeper.checksum
