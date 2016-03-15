@@ -16,6 +16,24 @@ group node[:kzookeeper][:group] do
   append true
 end
 
+systemd = true
+case node.platform
+when "ubuntu"
+ if node.platform_version.to_f <= 14.04
+    systemd = false
+ end
+end
+
+
+service_name="zookeeper"
+
+case node.platform_family
+  when "debian"
+systemd_script = "/lib/systemd/system/#{service_name}.service"
+  when "rhel"
+systemd_script = "/usr/lib/systemd/system/#{service_name}.service" 
+end
+
 
 # Pre-Experiment Code
 
@@ -24,7 +42,7 @@ require 'json'
 include_recipe 'build-essential::default'
 include_recipe 'java'
 
-zookeeper node[:zookeeper][:version] do
+kzookeeper node[:zookeeper][:version] do
   user        node[:kzookeeper][:user]
   mirror      node[:zookeeper][:mirror]
   checksum    node[:zookeeper][:checksum]
@@ -35,7 +53,7 @@ end
 
 zk_ip = private_recipe_ip("kzookeeper", "default")
 
-include_recipe "zookeeper::config_render"
+include_recipe "kzookeeper::config_render"
 
 template "#{node[:zookeeper][:base_dir]}/bin/zookeeper-start.sh" do
   source "zookeeper-start.sh.erb"
@@ -78,7 +96,7 @@ id=index+1
 config_hash["server.#{id}"]="#{ipaddress}:2888:3888"
 end
 
-zookeeper_config "/opt/zookeeper/zookeeper-#{node[:zookeeper][:version]}/conf/zoo.cfg" do
+kzookeeper_config "/opt/zookeeper/zookeeper-#{node[:zookeeper][:version]}/conf/zoo.cfg" do
   config config_hash
   user   node[:kzookeeper][:user]
   action :render
@@ -90,22 +108,40 @@ template '/etc/default/zookeeper' do
   group node[:kzookeeper][:group]
   action :create
   mode '0644'
-  cookbook 'zookeeper'
   notifies :restart, 'service[zookeeper]', :delayed
 end
 
-template '/etc/init.d/zookeeper' do
-  source 'zookeeper.initd.erb'
-  owner 'root'
-  group 'root'
-  action :create
-  mode '0755'
-  notifies :restart, 'service[zookeeper]', :delayed
-end
+if systemd == false 
+  template '/etc/init.d/zookeeper' do
+    source 'zookeeper.initd.erb'
+    owner 'root'
+    group 'root'
+    action :create
+    mode '0755'
+    notifies :restart, 'service[zookeeper]', :delayed
+  end
 
-service 'zookeeper' do
-  supports :status => true, :restart => true, :reload => true, :start => true, :stop => true
-  action :enable
+  service 'zookeeper' do
+    supports :status => true, :restart => true, :reload => true, :start => true, :stop => true
+    provider Chef::Provider::Service::Init::Debian
+    action :enable
+  end
+else
+  template systemd_script do
+    source 'zookeeper.service.erb'
+    owner 'root'
+    group 'root'
+    action :create
+    mode '0755'
+    notifies :restart, 'service[zookeeper]', :delayed
+  end
+
+  service 'zookeeper' do
+    supports :status => true, :restart => true, :reload => true, :start => true, :stop => true
+    provider Chef::Provider::Service::Systemd
+    action :enable
+  end
+
 end
 
 found_id=-1
