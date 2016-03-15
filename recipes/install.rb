@@ -43,12 +43,12 @@ require 'json'
 include_recipe 'build-essential::default'
 include_recipe 'java'
 
-kzookeeper_default node.zookeeper.version do
+kzookeeper  "#{node.kzookeeper.version}" do
   user        node.kzookeeper.user
-  mirror      node.zookeeper.mirror
-  checksum    node.zookeeper.checksum
-  install_dir node.zookeeper.install_dir
-  data_dir    node.zookeeper.config.dataDir
+  mirror      node.kzookeeper.mirror
+  checksum    node.kzookeeper.checksum
+  install_dir node.kzookeeper.install_dir
+  data_dir    node.kzookeeper.config.dataDir
   action      :install
 end
 
@@ -56,26 +56,26 @@ zk_ip = private_recipe_ip("kzookeeper", "default")
 
 include_recipe "kzookeeper::config_render"
 
-template "#{node.zookeeper.base_dir}/bin/zookeeper-start.sh" do
+template "#{node.kzookeeper.base_dir}/bin/zookeeper-start.sh" do
   source "zookeeper-start.sh.erb"
   owner node.kzookeeper.user
   group node.kzookeeper.user
   mode 0770
   variables({ :zk_ip => zk_ip,
-              :zk_dir => node.zookeeper.base_dir
+              :zk_dir => node.kzookeeper.base_dir
  })
 end
 
-template "#{node.zookeeper.base_dir}/bin/zookeeper-stop.sh" do
+template "#{node.kzookeeper.base_dir}/bin/zookeeper-stop.sh" do
   source "zookeeper-stop.sh.erb"
   owner node.kzookeeper.user
   group node.kzookeeper.user
   mode 0770
-  variables({ :zk_dir => node.zookeeper.base_dir
+  variables({ :zk_dir => node.kzookeeper.base_dir
  })
 end
 
-directory "#{node.zookeeper.base_dir}/data" do
+directory "#{node.kzookeeper.base_dir}/data" do
   owner node.kzookeeper.user
   group node.kzookeeper.group
   mode "755"
@@ -85,7 +85,7 @@ end
 
 config_hash = {
   clientPort: 2181, 
-  dataDir: "#{node.zookeeper.base_dir}/data", 
+  dataDir: "#{node.kzookeeper.base_dir}/data", 
   tickTime: 2000,
   syncLimit: 3,
   initLimit: 60,
@@ -104,7 +104,7 @@ config_hash["server.#{id}"]="#{ipaddress}:2888:3888"
 end
 #end
 
-kzookeeper_config "/opt/zookeeper/zookeeper-#{node.zookeeper.version}/conf/zoo.cfg" do
+kzookeeper_config "/opt/zookeeper/zookeeper-#{node.kzookeeper.version}/conf/zoo.cfg" do
   config config_hash
   user   node.kzookeeper.user
   action :render
@@ -171,7 +171,7 @@ end
 
 
 
-template "#{node.zookeeper.base_dir}/data/myid" do
+template "#{node.kzookeeper.base_dir}/data/myid" do
   source 'zookeeper.id.erb'
   owner node.kzookeeper.user
   group node.kzookeeper.group
@@ -183,7 +183,7 @@ end
 
 list_zks=node.kzookeeper[:default][:private_ips].join(",")
 
-template "#{node.zookeeper.base_dir}/bin/zkConnect.sh" do
+template "#{node.kzookeeper.base_dir}/bin/zkConnect.sh" do
   source 'zkClient.sh.erb'
   owner node.kzookeeper.user
   group node.kzookeeper.group
