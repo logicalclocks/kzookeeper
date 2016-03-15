@@ -4,13 +4,9 @@ After = syslog.target network.target remote-fs.target
 
 [Service]
 User = <%= node.kzookeeper.user %>
-
-WorkingDirectory=<%= node.zookeeper.base_dir %>
-PIDFile = /var/run/zookeeper.pid
-#ExecStart = <%= node.zookeeper.base_dir %>/bin/zookeeper-start.sh
-ExecStart = ./bin/zkServer.sh start
-#ExecStop = <%= node.zookeeper.base_dir %>/bin/zookeeper-stop.sh
-ExecStop = ./bin/zkServer.sh stop
+PIDFile = <%= node.zookeeper.base_dir %>/data/zookeeper_server.pid
+ExecStart = <%= node.zookeeper.base_dir %>/bin/zookeeper-start.sh
+ExecStop = <%= node.zookeeper.base_dir %>/bin/zookeeper-stop.sh
 
 Type = forking
 

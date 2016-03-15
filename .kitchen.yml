@@ -10,8 +10,8 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: centos-7.0
 #  - name: ubuntu-14.04
+  - name: centos-7.0
 #  - name: ubuntu-15.04
 
 suites: 
@@ -19,13 +19,12 @@ suites:
     run_list:
       - recipe[kagent::install]
       - recipe[kzookeeper::install]
+      - recipe[kzookeeper::default]
     attributes:
          kzookeeper:
-            default:
+            server:
                 private_ips: ["10.0.2.15"]
                 public_ips: ["10.0.2.15"]
-            private_ips: ["10.0.2.15"]
-            public_ips: ["10.0.2.15"]
          private_ips: ["10.0.2.15"]
          public_ips: ["10.0.2.15"]
          vagrant: "enabled"

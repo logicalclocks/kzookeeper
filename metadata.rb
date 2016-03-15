@@ -21,18 +21,14 @@ attribute "java/jdk_version",
 
 attribute "kzookeeper/version",
 :description => "Version of kzookeeper",
-:type => 'string',
-:default => "0.1"
-
+:type => 'string'
 
 attribute "kzookeeper/url",
 :description => "Url to download binaries for kzookeeper",
-:type => 'string',
-:default => ""
+:type => 'string'
 
 attribute "kzookeeper/user",
 :description => "Run kzookeeper as this user",
-:type => 'string',
-:default => "kzookeeper"
+:type => 'string'
 
 
