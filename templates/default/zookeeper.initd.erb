@@ -14,8 +14,8 @@
 ### END INIT INFO
 
 # Variables
-START_PROG="su -c \"<%= node[:zookeeper][:base_dir] %>/bin/zookeeper-start.sh\" <%= node[:kzookeeper][:user] %>"
-STOP_PROG="su -c \"<%= node[:zookeeper][:base_dir] %>/bin/zookeeper-stop.sh\" <%= node[:kzookeeper][:user] %>"
+START_PROG="su -c \"<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-start.sh\" <%= node[:kzookeeper][:user] %>"
+STOP_PROG="su -c \"<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-stop.sh\" <%= node[:kzookeeper][:user] %>"
 
 RETVAL=0
 
