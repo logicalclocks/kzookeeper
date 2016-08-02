@@ -89,6 +89,8 @@ config_hash = {
   tickTime: 2000,
   syncLimit: 3,
   initLimit: 60,
+# unlimited number of IO connections, this might be set to a reasonable number
+  maxClientCnxns: 0,
   autopurge: {
     snapRetainCount: 1,
     purgeInterval: 1
