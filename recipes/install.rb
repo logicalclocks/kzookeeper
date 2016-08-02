@@ -192,3 +192,16 @@ template "#{node.kzookeeper.base_dir}/bin/zkConnect.sh" do
   variables({ :servers => list_zks })
   notifies :restart, 'service[zookeeper]', :delayed
 end
+
+
+
+if node.kagent.enabled == "true"
+
+  kagent_config "zookeeper-#{found_id}" do
+    service "zookeeper-#{found_id}"
+    start_script 
+    stop_script 
+    log_file 
+    pid_file 
+  end
+end
