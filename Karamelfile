@@ -1,6 +1,6 @@
 dependencies:
   - recipe: kzookeeper::install
-    local:
+    global:
       - kagent::install
   - recipe: kzookeeper::default
 
