@@ -196,8 +196,8 @@ template "#{node.kzookeeper.base_dir}/bin/zkConnect.sh" do
 end
 
 if node.kagent.enabled == "true"
-  kagent_config "zookeeper-#{found_id}" do
-    service "zookeeper-#{found_id}"
+  kagent_config "zookeeper#{found_id}" do
+    service "zookeeper#{found_id}"
     start_script "#{node.kzookeeper.base_dir}/bin/zookeeper-start.sh"
     stop_script "#{node.kzookeeper.base_dir}/bin/zookeeper-stop.sh"
     log_file "#{node.kzookeeper.base_dir}/zookeeper.log"
