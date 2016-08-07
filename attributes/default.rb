@@ -2,8 +2,6 @@
 
 default.kzookeeper.version                   = '3.4.7'
 default.kzookeeper.url                       = ""
-#default.kzookeeper.version                  = "0.1"
-#default.kzookeeper.user                     = "zookeeper"
 default.kzookeeper.group                     = "zookeeper"
 
 default.kzookeeper.version_dir               = "/usr/local/kzookeeper-#{node.kzookeeper.version}"
@@ -17,9 +15,6 @@ default.kzookeeper.mirror                    = 'http://snurran.sics.se/hops/'
 default.kzookeeper.user                      = 'zookeeper'
 default.kzookeeper.install_dir               = '/opt/zookeeper'
 default.kzookeeper.use_java_cookbook         = true
-
-# One of 'upstart', 'runit', 'exhibitor'
-#default.zookeeper.service_style = 'systemd'
 
 default.kzookeeper.config = {
   clientPort: 2181,
