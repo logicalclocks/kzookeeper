@@ -195,12 +195,12 @@ template "#{node.kzookeeper.base_dir}/bin/zkConnect.sh" do
   notifies :restart, 'service[zookeeper]', :delayed
 end
 
-if node.kagent.enabled == "true"
-  kagent_config "zookeeper#{found_id}" do
-    service "zookeeper#{found_id}"
+#if node.kagent.enabled == "true"
+  kagent_config service_name do
+    service "zookeeper"
     start_script "#{node.kzookeeper.base_dir}/bin/zookeeper-start.sh"
     stop_script "#{node.kzookeeper.base_dir}/bin/zookeeper-stop.sh"
     log_file "#{node.kzookeeper.base_dir}/zookeeper.log"
     pid_file "#{node.kzookeeper.base_dir}/data/zookeeper_server.pid"
   end
-end
+#end
