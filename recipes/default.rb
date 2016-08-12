@@ -75,6 +75,16 @@ template "#{node.kzookeeper.base_dir}/bin/zookeeper-stop.sh" do
  })
 end
 
+template "#{node.kzookeeper.base_dir}/bin/zookeeper-status.sh" do
+  source "zookeeper-status.sh.erb"
+  owner node.kzookeeper.user
+  group node.kzookeeper.user
+  mode 0770
+  variables({ :zk_dir => node.kzookeeper.base_dir
+ })
+end
+
+
 directory "#{node.kzookeeper.base_dir}/data" do
   owner node.kzookeeper.user
   group node.kzookeeper.group

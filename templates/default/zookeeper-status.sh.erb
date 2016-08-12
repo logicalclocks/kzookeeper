@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+echo "Checking if Zookeeper is alive..."
+
+cd <%= @zk_dir %>
+./bin/zkServer.sh status
+
+
