@@ -14,8 +14,6 @@ default.kzookeeper.checksum                  = '2e043e04c4da82fbdb38a68e585f3317
 default.kzookeeper.mirror                    = 'http://snurran.sics.se/hops/'
 default.kzookeeper.user                      = 'zookeeper'
 
-default.kzookeeper.pid_file                  = "#{node.kzookeeper.base_dir}/data/zookeeper_server.pid"
-
 default.kzookeeper.use_java_cookbook         = true
 
 default.kzookeeper.config = {
