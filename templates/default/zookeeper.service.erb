@@ -4,7 +4,7 @@ After = syslog.target network.target remote-fs.target
 
 [Service]
 User = <%= node.kzookeeper.user %>
-PIDFile = <%= node.kzookeeper.base_dir %>/data/zookeeper_server.pid
+PIDFile = <%= node.kzookeeper.pid_file %>
 ExecStart = <%= node.kzookeeper.base_dir %>/bin/zookeeper-start.sh
 ExecStop = <%= node.kzookeeper.base_dir %>/bin/zookeeper-stop.sh
 

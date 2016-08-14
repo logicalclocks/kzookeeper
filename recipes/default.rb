@@ -56,36 +56,36 @@ zk_ip = private_recipe_ip("kzookeeper", "default")
 
 include_recipe "kzookeeper::config_render"
 
-template "#{node.kzookeeper.base_dir}/bin/zookeeper-start.sh" do
+template "#{node.kzookeeper.home}/bin/zookeeper-start.sh" do
   source "zookeeper-start.sh.erb"
   owner node.kzookeeper.user
   group node.kzookeeper.user
   mode 0770
   variables({ :zk_ip => zk_ip,
-              :zk_dir => node.kzookeeper.base_dir
+              :zk_dir => node.kzookeeper.home
  })
 end
 
-template "#{node.kzookeeper.base_dir}/bin/zookeeper-stop.sh" do
+template "#{node.kzookeeper.home}/bin/zookeeper-stop.sh" do
   source "zookeeper-stop.sh.erb"
   owner node.kzookeeper.user
   group node.kzookeeper.user
   mode 0770
-  variables({ :zk_dir => node.kzookeeper.base_dir
+  variables({ :zk_dir => node.kzookeeper.home
  })
 end
 
-template "#{node.kzookeeper.base_dir}/bin/zookeeper-status.sh" do
+template "#{node.kzookeeper.home}/bin/zookeeper-status.sh" do
   source "zookeeper-status.sh.erb"
   owner node.kzookeeper.user
   group node.kzookeeper.user
   mode 0770
-  variables({ :zk_dir => node.kzookeeper.base_dir
+  variables({ :zk_dir => node.kzookeeper.home
  })
 end
 
 
-directory "#{node.kzookeeper.base_dir}/data" do
+directory "#{node.kzookeeper.home}/data" do
   owner node.kzookeeper.user
   group node.kzookeeper.group
   mode "755"
@@ -95,7 +95,7 @@ end
 
 config_hash = {
   clientPort: 2181, 
-  dataDir: "#{node.kzookeeper.base_dir}/data", 
+  dataDir: "#{node.kzookeeper.home}/data", 
   tickTime: 2000,
   syncLimit: 3,
   initLimit: 60,
@@ -183,7 +183,7 @@ end
 
 
 
-template "#{node.kzookeeper.base_dir}/data/myid" do
+template "#{node.kzookeeper.home}/data/myid" do
   source 'zookeeper.id.erb'
   owner node.kzookeeper.user
   group node.kzookeeper.group
@@ -195,7 +195,7 @@ end
 
 list_zks=node.kzookeeper[:default][:private_ips].join(",")
 
-template "#{node.kzookeeper.base_dir}/bin/zkConnect.sh" do
+template "#{node.kzookeeper.home}/bin/zkConnect.sh" do
   source 'zkClient.sh.erb'
   owner node.kzookeeper.user
   group node.kzookeeper.group
@@ -204,6 +204,14 @@ template "#{node.kzookeeper.base_dir}/bin/zkConnect.sh" do
   variables({ :servers => list_zks })
   notifies :restart, 'service[zookeeper]', :delayed
 end
+
+
+link node.kzookeeper.base_dir do
+  owner node.kzookeeper.user
+  group node.kzookeeper.group
+  to node.kzookeeper.home
+end
+
 
 kagent_config service_name do
   service "zookeeper"

@@ -2,7 +2,22 @@
 set -e
 echo "Checking if Zookeeper is alive..."
 
-cd <%= @zk_dir %>
-./bin/zkServer.sh status
+#cd <%= @zk_dir %>
+#./bin/zkServer.sh status
 
+PID_FILE=<%= node.kzookeeper.pid_file %>
+
+if [ -f $PID_FILE ] ; then
+    PID=`cat $PID_FILE`
+    kill -0 $PID
+    res=$?
+else 
+    res=1
+fi
+if [ $res -eq 0 ] ; then
+    echo "zookeeper($PID) is running"
+else
+    echo "zookeeper is not running"
+fi
+return $res
 
