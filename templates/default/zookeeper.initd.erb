@@ -14,31 +14,29 @@
 ### END INIT INFO
 
 # Variables
-START_PROG="su -c \"<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-start.sh\" <%= node[:kzookeeper][:user] %>"
-STOP_PROG="su -c \"<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-stop.sh\" <%= node[:kzookeeper][:user] %>"
-STATUS_PROG="su -c \"<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-status.sh\" <%= node[:kzookeeper][:user] %>"
-
-RETVAL=0
+START_PROG="<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-start.sh"
+STOP_PROG="<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-stop.sh"
+STATUS_PROG="<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-status.sh"
+EXEC_WITH_USER="su <%= node.kzookeeper.user %> -c"
 
 start() {
   echo "Executing : $START_PROG"
-  $START_PROG
+  $EXEC_WITH_USER "$START_PROG"
   return $?
 }
 
 stop() {
   echo "Executing : $STOP_PROG"
-  $STOP_PROG
+  $EXEC_WITH_USER "$STOP_PROG"
   return $?
 }
 
 restart() {
-  echo "Executing : $RESTART_PROG"
-  res = $STOP_PROG
-  if [ $res -ne 0 ] ; then
-    return $res
+  $EXEC_WITH_USER "$STOP_PROG"
+  if [ $? -ne 0 ] ; then
+    return 1
   fi
-  $START_PROG
+  $EXEC_WITH_USER "$START_PROG"
   return $?
 }
 
@@ -77,5 +75,5 @@ case "$1" in
   esac
 
 
-exit $RETVAL
+exit $?
 

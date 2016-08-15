@@ -31,4 +31,8 @@ attribute "kzookeeper/user",
 :description => "Run kzookeeper as this user",
 :type => 'string'
 
+attribute "kzookeeper/group",
+:description => "Run kzookeeper user as this group",
+:type => 'string'
+
 
