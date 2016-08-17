@@ -7,6 +7,7 @@ version          "0.1"
 
 recipe            "kzookeeper::install", "Experiment setup for kzookeeper"
 recipe            "kzookeeper::default",  "configFile=; default recipe to install zookeeper"
+recipe            "kzookeeper::purge",  "Remove and delete zookeeper"
 
 depends 'kagent'
 depends 'java'
