@@ -5,5 +5,5 @@ source 'https://supermarket.chef.io'
 metadata
  
 cookbook 'kagent', github: "karamelchef/kagent-chef", branch: "master"
-cookbook 'java', '~> 1.39.0'
+cookbook 'java'
 

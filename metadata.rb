@@ -17,23 +17,27 @@ depends 'java'
 end
 
 attribute "java/jdk_version",
-:display_name =>  "Jdk version",
-:type => 'string'
+          :description =>  "Jdk version",
+          :type => 'string'
+
+attribute "java/install_flavor",
+          :description =>  "Oracle (default) or openjdk",
+          :type => 'string'
 
 attribute "kzookeeper/version",
-:description => "Version of kzookeeper",
-:type => 'string'
+          :description => "Version of kzookeeper",
+          :type => 'string'
 
 attribute "kzookeeper/url",
-:description => "Url to download binaries for kzookeeper",
-:type => 'string'
+          :description => "Url to download binaries for kzookeeper",
+          :type => 'string'
 
 attribute "kzookeeper/user",
-:description => "Run kzookeeper as this user",
-:type => 'string'
+          :description => "Run kzookeeper as this user",
+          :type => 'string'
 
 attribute "kzookeeper/group",
-:description => "Run kzookeeper user as this group",
-:type => 'string'
+          :description => "Run kzookeeper user as this group",
+          :type => 'string'
 
 

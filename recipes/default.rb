@@ -41,6 +41,7 @@ end
 require 'json'
 
 #include_recipe 'build-essential::default'
+
 include_recipe 'java'
 
 kzookeeper  "#{node.kzookeeper.version}" do

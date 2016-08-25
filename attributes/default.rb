@@ -1,4 +1,3 @@
-#include_attribute "zookeeper"
 include_attribute "kagent"
 
 default.kzookeeper.version                   = '3.4.7'
@@ -29,6 +28,5 @@ default.kzookeeper.home                      = "#{node.kzookeeper.install_dir}/z
 
 default.kzookeeper.pid_file                  = "#{node.kzookeeper.base_dir}/data/zookeeper_server.pid"
 
-node.default.java.jdk_version                = "7"
 
 
