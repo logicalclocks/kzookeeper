@@ -216,9 +216,6 @@ end
 
 kagent_config service_name do
   service "zookeeper"
-  start_script "#{node.kzookeeper.base_dir}/bin/zookeeper-start.sh"
-  stop_script "#{node.kzookeeper.base_dir}/bin/zookeeper-stop.sh"
   log_file "#{node.kzookeeper.base_dir}/zookeeper.log"
-  pid_file "#{node.kzookeeper.base_dir}/data/zookeeper_server.pid"
   config_file "#{node.kzookeeper.base_dir}/conf/zoo.cfg"
 end
