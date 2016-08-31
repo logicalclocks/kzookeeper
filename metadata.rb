@@ -3,7 +3,7 @@ maintainer       "Jim Dowling"
 maintainer_email "jdowling@kth.se"
 license          "Apache v2.0"
 description      'Installs/Configures/Runs kzookeeper'
-version          "0.1"
+version          "0.1.1"
 
 recipe            "kzookeeper::install", "Experiment setup for kzookeeper"
 recipe            "kzookeeper::default",  "configFile=; default recipe to install zookeeper"
