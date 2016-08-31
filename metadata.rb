@@ -1,20 +1,21 @@
-name             "kzookeeper"
 maintainer       "Jim Dowling"
 maintainer_email "jdowling@kth.se"
+name             "kzookeeper"
 license          "Apache v2.0"
 description      'Installs/Configures/Runs kzookeeper'
 version          "0.1.1"
 
-recipe            "kzookeeper::install", "Experiment setup for kzookeeper"
-recipe            "kzookeeper::default",  "configFile=; default recipe to install zookeeper"
-recipe            "kzookeeper::purge",  "Remove and delete zookeeper"
+%w{ ubuntu debian rhel centos }.each do |os|
+  supports os
+end
 
 depends 'kagent'
 depends 'java'
 
-%w{ ubuntu debian rhel centos }.each do |os|
-  supports os
-end
+recipe            "kzookeeper::install", "Installs kzookeeper binaries"
+recipe            "kzookeeper::default",  "configures zookeeper"
+recipe            "kzookeeper::purge",  "Remove and delete zookeeper"
+
 
 attribute "java/jdk_version",
           :description =>  "Jdk version",
