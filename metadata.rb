@@ -41,4 +41,7 @@ attribute "kzookeeper/group",
           :description => "Run kzookeeper user as this group",
           :type => 'string'
 
+attribute "kzookeeper/dir",
+          :description => "Base directory to install zookeeper (default: /opt)",
+          :type => 'string'
 

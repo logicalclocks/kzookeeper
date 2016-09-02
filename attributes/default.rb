@@ -5,7 +5,9 @@ default.kzookeeper.url                       = ""
 default.kzookeeper.user                      = "zookeeper"
 default.kzookeeper.group                     = "zookeeper"
 
-default.kzookeeper.install_dir               = '/opt/zookeeper'
+default.kzookeeper.dir                       = '/opt'
+
+default.kzookeeper.install_dir               = "#{node.kzookeeper.dir}/zookeeper"
 
 
 default[:kzookeeper][:default][:private_ips] = ['10.0.2.15']
