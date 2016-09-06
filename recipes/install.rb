@@ -21,3 +21,12 @@ directory "#{node.kzookeeper.install_dir}" do
   action :create
   recursive true
 end
+
+
+case node.platform_family
+
+  when "rhel"
+  package "patch" do
+    action :install
+  done
+end
