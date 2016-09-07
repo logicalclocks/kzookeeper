@@ -32,6 +32,6 @@ case node.platform_family
     code <<-EOF
     yum groupinstall 'Development Tools' end
   EOF
-
+  end
 end
 
