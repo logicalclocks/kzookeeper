@@ -2,9 +2,9 @@
 
 user node.kzookeeper.user do
   action :create
-  supports :manage_home => true
   home "/home/#{node.kzookeeper.user}"
   shell "/bin/bash"
+  manage_home true
   not_if "getent passwd #{node.kzookeeper.user}"
 end
 
