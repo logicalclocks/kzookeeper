@@ -30,7 +30,7 @@ case node.platform_family
   bash "install_patch_and_other_devtools" do
     user "root"
     code <<-EOF
-    yum groupinstall 'Development Tools' end
+    yum groupinstall 'Development Tools' -y
   EOF
   end
 end
