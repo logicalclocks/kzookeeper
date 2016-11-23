@@ -45,3 +45,6 @@ attribute "kzookeeper/dir",
           :description => "Base directory to install zookeeper (default: /opt)",
           :type => 'string'
 
+attribute "kzookeeper/default/private_ips",
+          :description => "Set ip addresses",
+          :type => "array"
