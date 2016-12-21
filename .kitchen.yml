@@ -30,6 +30,7 @@ suites:
          kzookeeper:
             default:
                private_ips: ["10.0.2.15"]
+            dir: "/srv/hops"	       
          kagent:
             enabled: "false"
             private_ips: ["10.0.2.15"]

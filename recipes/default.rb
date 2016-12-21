@@ -102,7 +102,7 @@ config_hash["server.#{id}"]="#{ipaddress}:2888:3888"
 end
 #end
 
-kzookeeper_config "/opt/zookeeper/zookeeper-#{node.kzookeeper.version}/conf/zoo.cfg" do
+kzookeeper_config "#{node.kzookeeper.home}/conf/zoo.cfg" do
   config config_hash
   user   node.kzookeeper.user
   action :render
