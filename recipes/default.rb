@@ -130,7 +130,9 @@ if systemd == false
   service 'zookeeper' do
     supports :status => true, :restart => true, :start => true, :stop => true
     provider Chef::Provider::Service::Init::Debian
+if node.services.enabled == "true"
     action :enable
+end
   end
 else
   template systemd_script do
@@ -145,7 +147,9 @@ else
   service 'zookeeper' do
     supports :status => true, :restart => true, :start => true, :stop => true
     provider Chef::Provider::Service::Systemd
+if node.services.enabled == "true"
     action :enable
+end
   end
 
 end
