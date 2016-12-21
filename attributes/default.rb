@@ -24,7 +24,7 @@ default.kzookeeper.use_java_cookbook         = true
 
 default.kzookeeper.config = {
   clientPort: 2181,
-  dataDir: "#{node.kzookeeper.base_dir}/data", 
+  dataDir: "#{node.kzookeeper.home}/data", 
   tickTime: 2000
 }
 
