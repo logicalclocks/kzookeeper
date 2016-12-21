@@ -9,6 +9,10 @@ default.kzookeeper.dir                       = '/opt'
 
 default.kzookeeper.install_dir               = "#{node.kzookeeper.dir}/zookeeper"
 
+default.kzookeeper.base_dir                  = "#{node.kzookeeper.install_dir}/zookeeper"
+
+default.kzookeeper.home                      = "#{node.kzookeeper.install_dir}/zookeeper-#{node.kzookeeper.version}"
+
 
 default[:kzookeeper][:default][:private_ips] = ['10.0.2.15']
 
@@ -24,9 +28,6 @@ default.kzookeeper.config = {
   tickTime: 2000
 }
 
-default.kzookeeper.base_dir                  = "#{node.kzookeeper.install_dir}/zookeeper"
-
-default.kzookeeper.home                      = "#{node.kzookeeper.install_dir}/zookeeper-#{node.kzookeeper.version}"
 
 default.kzookeeper.pid_file                  = "#{node.kzookeeper.base_dir}/data/zookeeper_server.pid"
 
