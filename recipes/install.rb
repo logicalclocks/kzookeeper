@@ -1,7 +1,14 @@
 # Nothing to do here...
 
+group node.kzookeeper.group do
+  action :create
+  not_if "getent group #{node.kzookeeper.group}"
+end
+
+
 user node.kzookeeper.user do
   action :create
+  gid node.kzookeeper.group
   home "/home/#{node.kzookeeper.user}"
   shell "/bin/bash"
   manage_home true
