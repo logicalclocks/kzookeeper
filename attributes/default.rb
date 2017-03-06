@@ -5,12 +5,10 @@ default.kzookeeper.url                       = ""
 default.kzookeeper.user                      = "zookeeper"
 default.kzookeeper.group                     = "zookeeper"
 
-default.kzookeeper.dir                       = '/opt'
 
+default.kzookeeper.dir                       = node.install.dir.empty? ? node.install.dir : "/opt"
 default.kzookeeper.install_dir               = "#{node.kzookeeper.dir}/zookeeper"
-
 default.kzookeeper.base_dir                  = "#{node.kzookeeper.install_dir}/zookeeper"
-
 default.kzookeeper.home                      = "#{node.kzookeeper.install_dir}/zookeeper-#{node.kzookeeper.version}"
 
 
