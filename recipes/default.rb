@@ -76,7 +76,6 @@ directory "#{node.kzookeeper.home}/data" do
   group node.kzookeeper.group
   mode "755"
   action :create
-  recursive true
 end
 
 config_hash = {
