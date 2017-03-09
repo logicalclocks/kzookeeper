@@ -26,7 +26,6 @@ directory "#{node.kzookeeper.install_dir}" do
   group node.kzookeeper.group
   mode "755"
   action :create
-  recursive true
 end
 
 
