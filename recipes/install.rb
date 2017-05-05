@@ -21,6 +21,14 @@ group node.kzookeeper.group do
   append true
 end
 
+directory "#{node.kzookeeper.dir}" do
+  owner node.kzookeeper.user
+  group node.kzookeeper.group
+  mode "775"
+  action :create
+  not_if { File.directory?("#{node["kzookeeper"]["dir"]}") }
+end
+
 directory "#{node.kzookeeper.install_dir}" do
   owner node.kzookeeper.user
   group node.kzookeeper.group
