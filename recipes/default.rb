@@ -243,6 +243,6 @@ end
 
 kagent_config service_name do
   service "zookeeper"
-  log_file "#{node.kzookeeper.base_dir}/zookeeper.log"
+  log_file "#{node.kzookeeper.base_dir}/zookeeper.out"
   config_file "#{node.kzookeeper.base_dir}/conf/zoo.cfg"
 end
