@@ -151,7 +151,7 @@ template '/etc/default/zookeeper' do
   group node.kzookeeper.group
   action :create
   mode '0644'
-  notifies :restart, 'service[#{service_name}]', :delayed
+  notifies :restart, "service[#{service_name}]", :delayed
 end
 
 if systemd == false 
@@ -161,10 +161,10 @@ if systemd == false
     group 'root'
     action :create
     mode '0755'
-    notifies :restart, 'service[#{service_name}]', :delayed
+    notifies :restart, "service[#{service_name}]", :delayed
   end
 
-  service '#{service_name}' do
+  service "#{service_name}" do
     supports :status => true, :restart => true, :start => true, :stop => true
     provider Chef::Provider::Service::Init::Debian
     if node.services.enabled == "true"
@@ -178,10 +178,10 @@ else
     group 'root'
     action :create
     mode '0755'
-    notifies :restart, 'service[#{service_name}]', :delayed
+    notifies :restart, "service[#{service_name}]", :delayed
   end
 
-  service '#{service_name}' do
+  service "#{service_name}" do
     supports :status => true, :restart => true, :start => true, :stop => true
     provider Chef::Provider::Service::Systemd
     if node.services.enabled == "true"
@@ -217,7 +217,7 @@ template "#{node.kzookeeper.home}/data/myid" do
   action :create
   mode '0755'
   variables({ :id => found_id })
-  notifies :restart, 'service[#{service_name}]', :delayed
+  notifies :restart, "service[#{service_name}]", :delayed
 end
 
 list_zks=node.kzookeeper[:default][:private_ips].join(",")
@@ -229,7 +229,7 @@ template "#{node.kzookeeper.home}/bin/zkConnect.sh" do
   action :create
   mode '0755'
   variables({ :servers => list_zks })
-  notifies :restart, 'service[#{service_name}]', :delayed
+  notifies :restart, "service[#{service_name}]", :delayed
 end
 
 
