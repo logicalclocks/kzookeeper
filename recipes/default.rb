@@ -5,11 +5,10 @@
 systemd = true
 case node.platform
 when "ubuntu"
- if node.platform_version.to_f <= 14.04
+  if node.platform_version.to_f <= 14.04
     systemd = false
- end
+  end
 end
-
 
 
 group node.kzookeeper.group do
@@ -53,10 +52,10 @@ end
 service_name="zookeeper"
 
 case node.platform_family
-  when "debian"
-systemd_script = "/lib/systemd/system/#{service_name}.service"
-  when "rhel"
-systemd_script = "/usr/lib/systemd/system/#{service_name}.service" 
+when "debian"
+  systemd_script = "/lib/systemd/system/#{service_name}.service"
+when "rhel"
+  systemd_script = "/usr/lib/systemd/system/#{service_name}.service" 
 end
 
 
@@ -88,7 +87,7 @@ template "#{node.kzookeeper.home}/bin/zookeeper-start.sh" do
   mode 0770
   variables({ :zk_ip => zk_ip,
               :zk_dir => node.kzookeeper.home
- })
+            })
 end
 
 template "#{node.kzookeeper.home}/bin/zookeeper-stop.sh" do
@@ -97,7 +96,7 @@ template "#{node.kzookeeper.home}/bin/zookeeper-stop.sh" do
   group node.kzookeeper.user
   mode 0770
   variables({ :zk_dir => node.kzookeeper.home
- })
+            })
 end
 
 template "#{node.kzookeeper.home}/bin/zookeeper-status.sh" do
@@ -106,7 +105,7 @@ template "#{node.kzookeeper.home}/bin/zookeeper-status.sh" do
   group node.kzookeeper.user
   mode 0770
   variables({ :zk_dir => node.kzookeeper.home
- })
+            })
 end
 
 
@@ -123,7 +122,7 @@ config_hash = {
   tickTime: 2000,
   syncLimit: 3,
   initLimit: 60,
-# unlimited number of IO connections, this might be set to a reasonable number
+  # unlimited number of IO connections, this might be set to a reasonable number
   maxClientCnxns: 0,
   autopurge: {
     snapRetainCount: 1,
@@ -135,8 +134,8 @@ config_hash = {
 #if node.kzookeeper != nil && node.kzookeeper.default != nil &&  node.kzookeeper.default.private_ips !=  nil
 
 node.kzookeeper[:default][:private_ips].each_with_index do |ipaddress, index|
-id=index+1
-config_hash["server.#{id}"]="#{ipaddress}:2888:3888"
+  id=index+1
+  config_hash["server.#{id}"]="#{ipaddress}:2888:3888"
 end
 #end
 
@@ -152,7 +151,7 @@ template '/etc/default/zookeeper' do
   group node.kzookeeper.group
   action :create
   mode '0644'
-  notifies :restart, 'service[zookeeper]', :delayed
+  notifies :restart, 'service[#{service_name}]', :delayed
 end
 
 if systemd == false 
@@ -162,15 +161,15 @@ if systemd == false
     group 'root'
     action :create
     mode '0755'
-    notifies :restart, 'service[zookeeper]', :delayed
+    notifies :restart, 'service[#{service_name}]', :delayed
   end
 
-  service 'zookeeper' do
+  service '#{service_name}' do
     supports :status => true, :restart => true, :start => true, :stop => true
     provider Chef::Provider::Service::Init::Debian
-if node.services.enabled == "true"
-    action :enable
-end
+    if node.services.enabled == "true"
+      action :enable
+    end
   end
 else
   template systemd_script do
@@ -179,15 +178,15 @@ else
     group 'root'
     action :create
     mode '0755'
-    notifies :restart, 'service[zookeeper]', :delayed
+    notifies :restart, 'service[#{service_name}]', :delayed
   end
 
-  service 'zookeeper' do
+  service '#{service_name}' do
     supports :status => true, :restart => true, :start => true, :stop => true
     provider Chef::Provider::Service::Systemd
-if node.services.enabled == "true"
-    action :enable
-end
+    if node.services.enabled == "true"
+      action :enable
+    end
   end
 
 end
@@ -218,7 +217,7 @@ template "#{node.kzookeeper.home}/data/myid" do
   action :create
   mode '0755'
   variables({ :id => found_id })
-  notifies :restart, 'service[zookeeper]', :delayed
+  notifies :restart, 'service[#{service_name}]', :delayed
 end
 
 list_zks=node.kzookeeper[:default][:private_ips].join(",")
@@ -230,7 +229,7 @@ template "#{node.kzookeeper.home}/bin/zkConnect.sh" do
   action :create
   mode '0755'
   variables({ :servers => list_zks })
-  notifies :restart, 'service[zookeeper]', :delayed
+  notifies :restart, 'service[#{service_name}]', :delayed
 end
 
 
@@ -242,7 +241,13 @@ end
 
 
 kagent_config service_name do
-  service "zookeeper"
+  service "#{service_name}"
   log_file "#{node.kzookeeper.base_dir}/zookeeper.log"
   config_file "#{node.kzookeeper.base_dir}/conf/zoo.cfg"
+end
+
+if systemd == true
+  kagent_config "#{service_name}" do
+    action :systemd_reload
+  end
 end
