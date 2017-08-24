@@ -43,7 +43,7 @@ end
 directory "#{node.kzookeeper.install_dir}" do
   owner node.kzookeeper.user
   group node.kzookeeper.group
-  mode "755"
+  mode "750"
   action :create
 end
 
