@@ -5,7 +5,7 @@ echo "Checking if Zookeeper is alive..."
 #cd <%= @zk_dir %>
 #./bin/zkServer.sh status
 
-PID_FILE=<%= node.kzookeeper.pid_file %>
+PID_FILE=<%= node['kzookeeper']['pid_file'] %>
 
 if [ -f $PID_FILE ] ; then
     PID=`cat $PID_FILE`

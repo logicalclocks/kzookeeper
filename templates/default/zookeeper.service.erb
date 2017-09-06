@@ -3,10 +3,10 @@ Description = Zookeeper centralized coordination service
 After = syslog.target network.target remote-fs.target
 
 [Service]
-User = <%= node.kzookeeper.user %>
-PIDFile = <%= node.kzookeeper.pid_file %>
-ExecStart = <%= node.kzookeeper.base_dir %>/bin/zookeeper-start.sh
-ExecStop = <%= node.kzookeeper.base_dir %>/bin/zookeeper-stop.sh
+User = <%= node['kzookeeper']['user'] %>
+PIDFile = <%= node['kzookeeper']['pid_file'] %>
+ExecStart = <%= node['kzookeeper']['base_dir'] %>/bin/zookeeper-start.sh
+ExecStop = <%= node['kzookeeper']['base_dir'] %>/bin/zookeeper-stop.sh
 
 Type = forking
 

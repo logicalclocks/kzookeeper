@@ -64,7 +64,7 @@ action :install do
 
   unless zk_installed?
     Chef::Log.info("Zookeeper version #{@version} not installed. Installing now!")
-    @zk_install_cmd.cwd(Chef::Config[:file_cache_path])
+    @zk_install_cmd.cwd(Chef::Config['file_cache_path'])
     @zk_install_cmd.command <<-eos
 tar -C #{@install_dir} -zxf zookeeper-#{@version}.tar.gz
 chown -R #{@user}:#{@group} #{@install_dir}
@@ -80,31 +80,31 @@ end
 private
 
 def zk_dependency_gems
-  %w(zookeeper json).collect { |gem| Chef::Resource::ChefGem.new(gem, @run_context) }
+  %w(zookeeper json).collect { |gem| Chef::ResourceResolver.resolve(:chef_gem).new(gem, @run_context) }
 end
 
 def zk_user_resource(user = '')
-  Chef::Resource::User.new(user, @run_context)
+  Chef::ResourceResolver.resolve(:user).new(user, @run_context)
 end
 
 def zk_group_resource(group = '')
-  Chef::Resource::Group.new(group, @run_context)
+  Chef::ResourceResolver.resolve(:group).new(group, @run_context)
 end
 
 def zk_source(path = '')
-  Chef::Resource::RemoteFile.new(path, @run_context)
+  Chef::ResourceResolver.resolve(:remote_file).new(path, @run_context)
 end
 
 def zk_data_dir(path = '')
-  Chef::Resource::Directory.new(path, @run_context)
+  Chef::ResourceResolver.resolve(:directory).new(path, @run_context)
 end
 
 def zk_install_dir(path = '')
-  Chef::Resource::Directory.new(path, @run_context)
+  Chef::ResourceResolver.resolve(:directory).new(path, @run_context)
 end
 
 def zk_install_command(cmd = '')
-  Chef::Resource::Execute.new(cmd, @run_context)
+  Chef::ResourceResolver.resolve(:execute).new(cmd, @run_context)
 end
 
 def zk_installed?
@@ -116,5 +116,5 @@ def zk_source_constructed
 end
 
 def zk_download_path
-  ::File.join(Chef::Config[:file_cache_path], "zookeeper-#{@version}.tar.gz")
+  ::File.join(Chef::Config['file_cache_path'], "zookeeper-#{@version}.tar.gz")
 end
