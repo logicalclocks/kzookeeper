@@ -3,46 +3,46 @@
 #
 
 systemd = true
-case node.platform
+case node['platform']
 when "ubuntu"
-  if node.platform_version.to_f <= 14.04
+  if node['platform_version'].to_f <= 14.04
     systemd = false
   end
 end
 
 
-group node.kzookeeper.group do
+group node['kzookeeper']['group'] do
   action :create
-  not_if "getent group #{node.kzookeeper.group}"
+  not_if "getent group #{node['kzookeeper']['group']}"
 end
 
 
-user node.kzookeeper.user do
+user node['kzookeeper']['user'] do
   action :create
-  gid node.kzookeeper.group
-  home "/home/#{node.kzookeeper.user}"
+  gid node['kzookeeper']['group']
+  home "/home/#{node['kzookeeper']['user']}"
   shell "/bin/bash"
   manage_home true
-  not_if "getent passwd #{node.kzookeeper.user}"
+  not_if "getent passwd #{node['kzookeeper']['user']}"
 end
 
-group node.kzookeeper.group do
+group node['kzookeeper']['group'] do
   action :modify
-  members ["#{node.kzookeeper.user}"]
+  members ["#{node['kzookeeper']['user']}"]
   append true
 end
 
-directory "#{node.kzookeeper.dir}" do
-  owner node.kzookeeper.user
-  group node.kzookeeper.group
+directory "#{node['kzookeeper']['dir']}" do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   mode "775"
   action :create
-  not_if { File.directory?("#{node["kzookeeper"]["dir"]}") }
+  not_if { File.directory?("#{node['kzookeeper']['dir']}") }
 end
 
-directory "#{node.kzookeeper.install_dir}" do
-  owner node.kzookeeper.user
-  group node.kzookeeper.group
+directory "#{node['kzookeeper']['install_dir']}" do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   mode "750"
   action :create
 end
@@ -51,11 +51,11 @@ end
 
 service_name="zookeeper"
 
-case node.platform_family
+case node['platform_family']
 when "debian"
   systemd_script = "/lib/systemd/system/#{service_name}.service"
 when "rhel"
-  systemd_script = "/usr/lib/systemd/system/#{service_name}.service" 
+  systemd_script = "/usr/lib/systemd/system/#{service_name}.service"
 end
 
 
@@ -67,12 +67,12 @@ require 'json'
 
 include_recipe 'java'
 
-kzookeeper  "#{node.kzookeeper.version}" do
-  user        node.kzookeeper.user
-  mirror      node.kzookeeper.mirror
-  checksum    node.kzookeeper.checksum
-  install_dir node.kzookeeper.install_dir
-  data_dir    node.kzookeeper.config.dataDir
+kzookeeper "#{node['kzookeeper']['version']}" do
+  user        node['kzookeeper']['user']
+  mirror      node['kzookeeper']['mirror']
+  checksum    node['kzookeeper']['checksum']
+  install_dir node['kzookeeper']['install_dir']
+  data_dir    node['kzookeeper']['config']['dataDir']
   action      :install
 end
 
@@ -80,45 +80,45 @@ zk_ip = private_recipe_ip("kzookeeper", "default")
 
 include_recipe "kzookeeper::config_render"
 
-template "#{node.kzookeeper.home}/bin/zookeeper-start.sh" do
+template "#{node['kzookeeper']['home']}/bin/zookeeper-start.sh" do
   source "zookeeper-start.sh.erb"
-  owner node.kzookeeper.user
-  group node.kzookeeper.user
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['user']
   mode 0770
   variables({ :zk_ip => zk_ip,
-              :zk_dir => node.kzookeeper.home
+              :zk_dir => node['kzookeeper']['home']
             })
 end
 
-template "#{node.kzookeeper.home}/bin/zookeeper-stop.sh" do
+template "#{node['kzookeeper']['home']}/bin/zookeeper-stop.sh" do
   source "zookeeper-stop.sh.erb"
-  owner node.kzookeeper.user
-  group node.kzookeeper.user
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['user']
   mode 0770
-  variables({ :zk_dir => node.kzookeeper.home
+  variables({ :zk_dir => node['kzookeeper']['home']
             })
 end
 
-template "#{node.kzookeeper.home}/bin/zookeeper-status.sh" do
+template "#{node['kzookeeper']['home']}/bin/zookeeper-status.sh" do
   source "zookeeper-status.sh.erb"
-  owner node.kzookeeper.user
-  group node.kzookeeper.user
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['user']
   mode 0770
-  variables({ :zk_dir => node.kzookeeper.home
+  variables({ :zk_dir => node['kzookeeper']['home']
             })
 end
 
 
-directory "#{node.kzookeeper.home}/data" do
-  owner node.kzookeeper.user
-  group node.kzookeeper.group
+directory "#{node['kzookeeper']['home']}/data" do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   mode "755"
   action :create
 end
 
 config_hash = {
-  clientPort: 2181, 
-  dataDir: "#{node.kzookeeper.home}/data", 
+  clientPort: 2181,
+  dataDir: "#{node['kzookeeper']['home']}/data",
   tickTime: 2000,
   syncLimit: 3,
   initLimit: 60,
@@ -131,30 +131,30 @@ config_hash = {
 }
 
 
-#if node.kzookeeper != nil && node.kzookeeper.default != nil &&  node.kzookeeper.default.private_ips !=  nil
+#if node['kzookeeper'] != nil && node['kzookeeper']['default'] != nil &&  node['kzookeeper']['default']['private_ips'] !=  nil
 
-node.kzookeeper[:default][:private_ips].each_with_index do |ipaddress, index|
+node['kzookeeper']['default']['private_ips'].each_with_index do |ipaddress, index|
   id=index+1
   config_hash["server.#{id}"]="#{ipaddress}:2888:3888"
 end
 #end
 
-kzookeeper_config "#{node.kzookeeper.home}/conf/zoo.cfg" do
+kzookeeper_config "#{node['kzookeeper']['home']}/conf/zoo.cfg" do
   config config_hash
-  user   node.kzookeeper.user
+  user   node['kzookeeper']['user']
   action :render
 end
 
 template '/etc/default/zookeeper' do
   source 'environment-defaults.erb'
-  owner node.kzookeeper.user
-  group node.kzookeeper.group
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   action :create
   mode '0644'
   notifies :restart, "service[#{service_name}]", :delayed
 end
 
-if systemd == false 
+if systemd == false
   template '/etc/init.d/zookeeper' do
     source 'zookeeper.initd.erb'
     owner 'root'
@@ -167,7 +167,7 @@ if systemd == false
   service "#{service_name}" do
     supports :status => true, :restart => true, :start => true, :stop => true
     provider Chef::Provider::Service::Init::Debian
-    if node.services.enabled == "true"
+    if node['services']['enabled'] == "true"
       action :enable
     end
   end
@@ -184,7 +184,7 @@ else
   service "#{service_name}" do
     supports :status => true, :restart => true, :start => true, :stop => true
     provider Chef::Provider::Service::Systemd
-    if node.services.enabled == "true"
+    if node['services']['enabled'] == "true"
       action :enable
     end
   end
@@ -195,37 +195,37 @@ found_id=-1
 id=1
 my_ip = my_private_ip()
 
-for zk in node.kzookeeper[:default][:private_ips]
+for zk in node['kzookeeper']['default']['private_ips']
   if my_ip.eql? zk
     Chef::Log.info "Found matching IP address in the list of zkd nodes: #{zk}. ID= #{id}"
     found_id = id
   end
   id += 1
 
-end 
+end
 Chef::Log.info "Found ID IS: #{found_id}"
 if found_id == -1
-  raise "Could not find matching IP address #{my_ip} in the list of zkd nodes: " + node.kzookeeper[:default][:private_ips].join(",")
+  raise "Could not find matching IP address #{my_ip} in the list of zkd nodes: " + node['kzookeeper']['default']['private_ips'].join(",")
 end
 
 
 
-template "#{node.kzookeeper.home}/data/myid" do
+template "#{node['kzookeeper']['home']}/data/myid" do
   source 'zookeeper.id.erb'
-  owner node.kzookeeper.user
-  group node.kzookeeper.group
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   action :create
   mode '0755'
   variables({ :id => found_id })
   notifies :restart, "service[#{service_name}]", :delayed
 end
 
-list_zks=node.kzookeeper[:default][:private_ips].join(",")
+list_zks=node['kzookeeper']['default']['private_ips'].join(",")
 
-template "#{node.kzookeeper.home}/bin/zkConnect.sh" do
+template "#{node['kzookeeper']['home']}/bin/zkConnect.sh" do
   source 'zkClient.sh.erb'
-  owner node.kzookeeper.user
-  group node.kzookeeper.group
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   action :create
   mode '0755'
   variables({ :servers => list_zks })
@@ -233,17 +233,17 @@ template "#{node.kzookeeper.home}/bin/zkConnect.sh" do
 end
 
 
-link node.kzookeeper.base_dir do
-  owner node.kzookeeper.user
-  group node.kzookeeper.group
-  to node.kzookeeper.home
+link node['kzookeeper']['base_dir'] do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  to node['kzookeeper']['home']
 end
 
 
 kagent_config service_name do
   service "#{service_name}"
-  log_file "#{node.kzookeeper.base_dir}/zookeeper.log"
-  config_file "#{node.kzookeeper.base_dir}/conf/zoo.cfg"
+  log_file "#{node['kzookeeper']['base_dir']}/zookeeper.log"
+  config_file "#{node['kzookeeper']['base_dir']}/conf/zoo.cfg"
 end
 
 if systemd == true

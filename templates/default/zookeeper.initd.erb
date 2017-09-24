@@ -14,10 +14,10 @@
 ### END INIT INFO
 
 # Variables
-START_PROG="<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-start.sh"
-STOP_PROG="<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-stop.sh"
-STATUS_PROG="<%= node[:kzookeeper][:base_dir] %>/bin/zookeeper-status.sh"
-EXEC_WITH_USER="su <%= node.kzookeeper.user %> -c"
+START_PROG="<%= node['kzookeeper']['base_dir'] %>/bin/zookeeper-start.sh"
+STOP_PROG="<%= node['kzookeeper']['base_dir'] %>/bin/zookeeper-stop.sh"
+STATUS_PROG="<%= node['kzookeeper']['base_dir'] %>/bin/zookeeper-status.sh"
+EXEC_WITH_USER="su <%= node['kzookeeper']['user'] %> -c"
 
 start() {
   echo "Executing : $START_PROG"

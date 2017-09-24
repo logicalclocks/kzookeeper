@@ -23,13 +23,13 @@ def zookeeper
 end
 
 action :create_if_missing do
-  unless kzookeeper.stat(:path => @new_resource.path)[:stat].exists?
+  unless kzookeeper.stat(:path => @new_resource.path)['stat'].exists?
     kzookeeper.create(:path => @new_resource.path, :data => @new_resource.data)
   end
 end
 
 action :create do
-  if kzookeeper.stat(:path => @new_resource.path)[:stat].exists?
+  if kzookeeper.stat(:path => @new_resource.path)['stat'].exists?
     kzookeeper.set(:path => @new_resource.path, :data => @new_resource.data)
   else
     kzookeeper.create(:path => @new_resource.path, :data => @new_resource.data)
