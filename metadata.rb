@@ -49,6 +49,10 @@ attribute "kzookeeper/default/private_ips",
           :description => "Set ip addresses",
           :type => "array"
 
+attribute "kzookeeper/default/public_ips",
+          :description => "Set ip addresses",
+          :type => "array"
+
 attribute "install/dir",
           :description => "Set to a base directory under which we will install.",
           :type => "string"
