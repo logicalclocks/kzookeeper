@@ -241,7 +241,7 @@ end
 
 
 kagent_config service_name do
-  service "zookeeper"
+  service "kafka"
   log_file "#{node['kzookeeper']['base_dir']}/zookeeper.log"
   config_file "#{node['kzookeeper']['base_dir']}/conf/zoo.cfg"
 end
