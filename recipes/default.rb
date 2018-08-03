@@ -21,7 +21,7 @@ user node['kzookeeper']['user'] do
   action :create
   gid node['kzookeeper']['group']
   shell "/bin/false"
-  system True
+  system true
   not_if "getent passwd #{node['kzookeeper']['user']}"
 end
 
