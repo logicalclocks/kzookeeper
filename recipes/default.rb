@@ -20,9 +20,8 @@ end
 user node['kzookeeper']['user'] do
   action :create
   gid node['kzookeeper']['group']
-  home "/home/#{node['kzookeeper']['user']}"
-  shell "/bin/bash"
-  manage_home true
+  shell "/bin/false"
+  system true
   not_if "getent passwd #{node['kzookeeper']['user']}"
 end
 
