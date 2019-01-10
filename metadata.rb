@@ -16,15 +16,6 @@ recipe            "kzookeeper::install", "Installs kzookeeper binaries"
 recipe            "kzookeeper::default",  "configures zookeeper"
 recipe            "kzookeeper::purge",  "Remove and delete zookeeper"
 
-
-attribute "java/jdk_version",
-          :description =>  "Jdk version",
-          :type => 'string'
-
-attribute "java/install_flavor",
-          :description =>  "Oracle (default) or openjdk",
-          :type => 'string'
-
 attribute "kzookeeper/version",
           :description => "Version of kzookeeper",
           :type => 'string'
