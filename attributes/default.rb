@@ -12,8 +12,8 @@ default['kzookeeper']['base_dir']                  = "#{node['kzookeeper']['inst
 default['kzookeeper']['home']                      = "#{node['kzookeeper']['install_dir']}/zookeeper-#{node['kzookeeper']['version']}"
 
 
-default['kzookeeper']['default']['private_ips'] = ['10.0.2.15']
-
+default['kzookeeper']['default']['public_ips']     = node["install"]["public_ips"].empty? ? ['10.0.2.15'] : node["install"]["public_ips"]  
+default['kzookeeper']['default']['private_ips']    = node["install"]["private_ips"].empty? ? ['10.0.2.15'] : node["install"]["private_ips"]
 
 default['kzookeeper']['checksum']                  = '2e043e04c4da82fbdb38a68e585f3317535b3842c726e0993312948afcc83870'
 default['kzookeeper']['mirror']                    = node['download_url']
