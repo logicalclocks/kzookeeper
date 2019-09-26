@@ -14,6 +14,7 @@ end
 group node['kzookeeper']['group'] do
   action :create
   not_if "getent group #{node['kzookeeper']['group']}"
+  not_if { node['install']['external_users'].casecmp("true") == 0 }
 end
 
 
@@ -23,12 +24,14 @@ user node['kzookeeper']['user'] do
   shell "/bin/false"
   system true
   not_if "getent passwd #{node['kzookeeper']['user']}"
+  not_if { node['install']['external_users'].casecmp("true") == 0 }
 end
 
 group node['kzookeeper']['group'] do
   action :modify
   members ["#{node['kzookeeper']['user']}"]
   append true
+  not_if { node['install']['external_users'].casecmp("true") == 0 }
 end
 
 directory "#{node['kzookeeper']['dir']}" do
