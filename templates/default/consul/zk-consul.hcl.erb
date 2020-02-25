@@ -1,0 +1,29 @@
+services = [
+    {
+        id = "client"
+        name = "zookeeper"
+        tags = [
+            "client",
+            "<%= @id %>"
+        ]
+        port = 2181
+    },
+    {
+        id = "peer"
+        name = "zookeeper"
+        tags = [
+            "peer",
+            "<%= @id %>"
+        ]
+        port = 2888
+    },
+    {
+        id = "leader"
+        name = "zookeeper"
+        tags = [
+            "leader",
+            "<%= @id %>"
+        ]
+        port = 3888
+    }
+]
