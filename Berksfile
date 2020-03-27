@@ -6,3 +6,4 @@ metadata
  
 cookbook 'java'
 cookbook 'kagent', github: "logicalclocks/kagent-chef", branch: "master"
+cookbook 'consul', github: "logicalclocks/consul-chef", branch: "master"

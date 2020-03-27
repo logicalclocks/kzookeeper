@@ -87,7 +87,7 @@ template "#{node['kzookeeper']['home']}/bin/zookeeper-start.sh" do
   owner node['kzookeeper']['user']
   group node['kzookeeper']['user']
   mode 0770
-  variables({ :zk_ip => zk_ip,
+  variables({
               :zk_dir => node['kzookeeper']['home']
             })
 end
@@ -97,7 +97,8 @@ template "#{node['kzookeeper']['home']}/bin/zookeeper-stop.sh" do
   owner node['kzookeeper']['user']
   group node['kzookeeper']['user']
   mode 0770
-  variables({ :zk_dir => node['kzookeeper']['home']
+  variables({
+              :zk_dir => node['kzookeeper']['home']
             })
 end
 
@@ -106,7 +107,8 @@ template "#{node['kzookeeper']['home']}/bin/zookeeper-status.sh" do
   owner node['kzookeeper']['user']
   group node['kzookeeper']['user']
   mode 0770
-  variables({ :zk_dir => node['kzookeeper']['home']
+  variables({
+              :zk_dir => node['kzookeeper']['home']
             })
 end
 
@@ -135,9 +137,12 @@ config_hash = {
 
 #if node['kzookeeper'] != nil && node['kzookeeper']['default'] != nil &&  node['kzookeeper']['default']['private_ips'] !=  nil
 
+zookeeper_fqdn = consul_helper.get_service_fqdn("zookeeper")
+zookeepers = []
 node['kzookeeper']['default']['private_ips'].each_with_index do |ipaddress, index|
   id=index+1
-  config_hash["server.#{id}"]="#{ipaddress}:2888:3888"
+  config_hash["server.#{id}"]="#{id}.#{zookeeper_fqdn}:2888:3888"
+  zookeepers.push("#{id}.#{zookeeper_fqdn}")
 end
 #end
 
@@ -222,15 +227,13 @@ template "#{node['kzookeeper']['home']}/data/myid" do
   notifies :restart, "service[#{service_name}]", :delayed
 end
 
-list_zks=node['kzookeeper']['default']['private_ips'].join(",")
-
 template "#{node['kzookeeper']['home']}/bin/zkConnect.sh" do
   source 'zkClient.sh.erb'
   owner node['kzookeeper']['user']
   group node['kzookeeper']['group']
   action :create
   mode '0755'
-  variables({ :servers => list_zks })
+  variables({ :servers => zookeepers.join(",") })
   notifies :restart, "service[#{service_name}]", :delayed
 end
 
@@ -252,4 +255,13 @@ if systemd == true
   kagent_config "#{service_name}" do
     action :systemd_reload
   end
+end
+
+# Register ZooKeeper with Consul
+consul_service "Registering ZooKeeper with Consul" do
+  service_definition "consul/zk-consul.hcl.erb"
+  template_variables({
+    :id => found_id
+  })
+  action :register
 end
