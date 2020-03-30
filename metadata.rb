@@ -9,9 +9,9 @@ version          "1.3.0"
   supports os
 end
 
-depends 'kagent'
-depends 'java'
-depends 'consul'
+
+depends 'java', '~> 7.0.0'
+
 
 recipe            "kzookeeper::install", "Installs kzookeeper binaries"
 recipe            "kzookeeper::default",  "configures zookeeper"
