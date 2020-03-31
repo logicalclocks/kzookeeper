@@ -11,6 +11,7 @@ end
 
 
 depends 'java', '~> 7.0.0'
+depends 'kagent'
 
 
 recipe            "kzookeeper::install", "Installs kzookeeper binaries"
