@@ -4,6 +4,7 @@ dependencies:
       - kagent::install
   - recipe: kzookeeper::default
     global:
+      - consul::master
       - consul::slave
       - kagent::default
 
