@@ -265,3 +265,13 @@ consul_service "Registering ZooKeeper with Consul" do
   })
   action :register
 end
+
+# Wait until node was joined the cluster
+bash 'check_node_status' do
+  user "root"
+  group "root"
+  timeout 120
+  code <<-EOH
+       until #{node['kzookeeper']['install_dir']}/zookeeper/bin/zkServer.sh status; do sleep 1; done
+  EOH
+end
