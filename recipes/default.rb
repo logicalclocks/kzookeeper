@@ -266,7 +266,8 @@ consul_service "Registering ZooKeeper with Consul" do
   action :register
 end
 
-# Wait until node was joined the cluster
+# Wait until node was joined the cluster. The "zkServer.sh status" command exits with "1" if the node is not
+# connected to the cluster, otherwise it exits with "0"
 bash 'check_node_status' do
   user "root"
   group "root"
