@@ -271,7 +271,7 @@ end
 bash 'check_node_status' do
   user "root"
   group "root"
-  timeout 120
+  timeout 240
   code <<-EOH
        until #{node['kzookeeper']['install_dir']}/zookeeper/bin/zkServer.sh status; do sleep 1; done
   EOH
