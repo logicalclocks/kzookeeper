@@ -1,12 +1,16 @@
 [Unit]
 Description = Zookeeper centralized coordination service
 After = syslog.target network.target remote-fs.target
+StartLimitIntervalSec=80
+StartLimitBurst=20
 
 [Service]
 User = <%= node['kzookeeper']['user'] %>
 PIDFile = <%= node['kzookeeper']['pid_file'] %>
 ExecStart = <%= node['kzookeeper']['base_dir'] %>/bin/zookeeper-start.sh
 ExecStop = <%= node['kzookeeper']['base_dir'] %>/bin/zookeeper-stop.sh
+Restart=on-failure
+RestartSec=2
 
 Type = forking
 
