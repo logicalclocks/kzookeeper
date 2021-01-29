@@ -3,7 +3,7 @@ maintainer_email "jdowling@kth.se"
 name             "kzookeeper"
 license          "Apache v2.0"
 description      'Installs/Configures/Runs kzookeeper'
-version          "2.1.0"
+version          "2.2.0"
 
 %w{ ubuntu debian rhel centos }.each do |os|
   supports os
