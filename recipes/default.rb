@@ -206,13 +206,11 @@ template "#{node['kzookeeper']['home']}/bin/zkConnect.sh" do
   notifies :restart, "service[#{service_name}]", :delayed
 end
 
-
 link node['kzookeeper']['base_dir'] do
   owner node['kzookeeper']['user']
   group node['kzookeeper']['group']
   to node['kzookeeper']['home']
 end
-
 
 kagent_config service_name do
   service "kafka"
@@ -220,10 +218,8 @@ kagent_config service_name do
   config_file "#{node['kzookeeper']['base_dir']}/conf/zoo.cfg"
 end
 
-if systemd == true
-  kagent_config "#{service_name}" do
-    action :systemd_reload
-  end
+kagent_config "#{service_name}" do
+  action :systemd_reload
 end
 
 # Register ZooKeeper with Consul
