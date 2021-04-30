@@ -10,9 +10,9 @@ version          "2.3.0"
 end
 
 
-depends 'java', '~> 7.0.0'
 depends 'kagent'
 depends 'consul'
+depends 'java'
 
 
 recipe            "kzookeeper::install", "Installs kzookeeper binaries"
