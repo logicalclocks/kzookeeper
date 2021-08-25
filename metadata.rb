@@ -31,8 +31,16 @@ attribute "kzookeeper/user",
           :description => "Run kzookeeper as this user",
           :type => 'string'
 
+attribute "kzookeeper/user_id",
+          :description => "zookeeper user id",
+          :type => 'string'
+
 attribute "kzookeeper/group",
           :description => "Run kzookeeper user as this group",
+          :type => 'string'
+
+attribute "kzookeeper/group_id",
+          :description => "zookeeper group id",
           :type => 'string'
 
 attribute "kzookeeper/dir",
