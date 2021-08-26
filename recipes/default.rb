@@ -3,6 +3,7 @@
 #
 
 group node['kzookeeper']['group'] do
+  gid node['kzookeeper']['group_id']
   action :create
   not_if "getent group #{node['kzookeeper']['group']}"
   not_if { node['install']['external_users'].casecmp("true") == 0 }
@@ -11,6 +12,7 @@ end
 
 user node['kzookeeper']['user'] do
   action :create
+  uid node['kzookeeper']['user_id']
   gid node['kzookeeper']['group']
   shell "/bin/false"
   system true

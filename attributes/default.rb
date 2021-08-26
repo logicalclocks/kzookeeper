@@ -3,7 +3,9 @@ include_attribute "kagent"
 default['kzookeeper']['version']                   = '3.4.7'
 default['kzookeeper']['url']                       = ""
 default['kzookeeper']['user']                      = node['install']['user'].empty? ? "zookeeper" : node['install']['user']
+default['kzookeeper']['user_id']                   = '1520'
 default['kzookeeper']['group']                     = node['install']['user'].empty? ? "zookeeper" : node['install']['user']
+default['kzookeeper']['group_id']                  = '1515'
 
 
 default['kzookeeper']['dir']                       = node['install']['dir'].empty? ? "/opt" : node['install']['dir']
