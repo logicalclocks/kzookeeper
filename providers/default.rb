@@ -23,8 +23,6 @@ def initialize(new_resource, run_context)
   @checksum        = new_resource.checksum
   @install_dir     = new_resource.install_dir
   @data_dir        = new_resource.data_dir
-  @user_res        = zk_user_resource(@user)
-  @group_res       = zk_group_resource(@group)
   @install_dir_res = zk_install_dir(@install_dir)
   @data_dir_res    = zk_data_dir(@data_dir)
   @zk_source       = zk_source("zookeeper-#{@version}")
@@ -33,11 +31,6 @@ end
 
 # Install Zookeeper
 action :install do
-  @group_res.run_action(:create)
-
-  @user_res.gid(@group)
-  @user_res.run_action(:create)
-
   @zk_source.path(zk_download_path)
   @zk_source.owner('root')
   @zk_source.mode(00644)
@@ -73,14 +66,6 @@ action :uninstall do
 end
 
 private
-
-def zk_user_resource(user = '')
-  Chef::ResourceResolver.resolve(:user).new(user, @run_context)
-end
-
-def zk_group_resource(group = '')
-  Chef::ResourceResolver.resolve(:group).new(group, @run_context)
-end
 
 def zk_source(path = '')
   Chef::ResourceResolver.resolve(:remote_file).new(path, @run_context)
