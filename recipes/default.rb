@@ -143,15 +143,6 @@ kzookeeper_config "#{node['kzookeeper']['home']}/conf/zoo.cfg" do
   action :render
 end
 
-template '/etc/default/zookeeper' do
-  source 'environment-defaults.erb'
-  owner node['kzookeeper']['user']
-  group node['kzookeeper']['group']
-  action :create
-  mode '0644'
-  notifies :restart, "service[#{service_name}]", :delayed
-end
-
 template systemd_script do
   source 'zookeeper.service.erb'
   owner 'root'
