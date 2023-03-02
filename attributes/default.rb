@@ -26,9 +26,20 @@ default['kzookeeper']['download_url']              = ::File.join(node['download_
 default['kzookeeper']['use_java_cookbook']         = true
 
 default['kzookeeper']['config'] = {
-  clientPort: 2181,
+  #clientPort: 2181,
+  secureClientPort: 2182,
   dataDir: "#{node['kzookeeper']['home']}/data", 
-  tickTime: 2000
+  tickTime: 2000,
+  serverCnxnFactory: "org.apache.zookeeper.server.NettyServerCnxnFactory",
+  "authProvider.x509": "org.apache.zookeeper.server.auth.X509AuthenticationProvider",
+  syncLimit: 3,
+  initLimit: 60,
+  # unlimited number of IO connections, this might be set to a reasonable number
+  maxClientCnxns: 0,
+  autopurge: {
+    snapRetainCount: 1,
+    purgeInterval: 1
+  }
 }
 
 

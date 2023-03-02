@@ -15,6 +15,25 @@
 # limitations under the License.
 
 # set the config path based on default attributes
+
+crypto_dir = x509_helper.get_crypto_dir(node['kzookeeper']['user'])
+kstore_file, tstore_file = x509_helper.get_user_keystores_name(node['kzookeeper']['user'])
+
+node.override['kzookeeper']['config']['ssl.keyStore.location'] = "#{crypto_dir}/#{kstore_file}"
+node.override['kzookeeper']['config']['ssl.keyStore.password'] = node['hopsworks']['master']['password']
+node.override['kzookeeper']['config']['ssl.trustStore.location'] = "#{crypto_dir}/#{kstore_file}"
+node.override['kzookeeper']['config']['ssl.trustStore.password'] = node['hopsworks']['master']['password']
+
+zookeeper_fqdn = consul_helper.get_service_fqdn("zookeeper")
+zookeepers = []
+node['kzookeeper']['default']['private_ips'].each_with_index do |ipaddress, index|
+  id=index+1
+  node.override['kzookeeper']['config']["server.#{id}"]="#{id}.#{zookeeper_fqdn}:2888:3888"
+  zookeepers.push("#{id}.#{zookeeper_fqdn}")
+end
+
+node.override['kzookeeper']['servers'] = zookeepers
+
 config_path = ::File.join(node['kzookeeper']['install_dir'],
                           "zookeeper-#{node['kzookeeper']['version']}",
                           'conf',
