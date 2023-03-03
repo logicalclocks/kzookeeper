@@ -58,9 +58,6 @@ end
 # Pre-Experiment Code
 
 require 'json'
-
-#include_recipe 'build-essential::default'
-
 include_recipe 'java'
 
 kzookeeper "#{node['kzookeeper']['version']}" do
@@ -81,9 +78,6 @@ template "#{node['kzookeeper']['home']}/bin/zookeeper-start.sh" do
   owner node['kzookeeper']['user']
   group node['kzookeeper']['user']
   mode 0770
-  variables({
-              :zk_dir => node['kzookeeper']['home']
-            })
 end
 
 template "#{node['kzookeeper']['home']}/bin/zookeeper-stop.sh" do
@@ -106,11 +100,37 @@ template "#{node['kzookeeper']['home']}/bin/zookeeper-status.sh" do
             })
 end
 
-directory "#{node['kzookeeper']['home']}/data" do
+directory "#{node['kzookeeper']['data_volume']['root_dir']}" do
   owner node['kzookeeper']['user']
   group node['kzookeeper']['group']
-  mode "755"
+  mode "750"
   action :create
+end
+
+directory "#{node['kzookeeper']['data_volume']['data_dir']}" do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  mode "750"
+  action :create
+end
+
+bash 'Move kzookeeper data to data volume' do
+  user 'root'
+  code <<-EOH
+    set -e
+    mv -f #{node['kzookeeper']['data_dir']}/* #{node['kzookeeper']['data_volume']['data_dir']}
+    rm -rf #{node['kzookeeper']['data_dir']}
+  EOH
+  only_if { conda_helpers.is_upgrade }
+  only_if { File.directory?(node['kzookeeper']['data_dir'])}
+  not_if { File.symlink?(node['kzookeeper']['data_dir'])}
+end
+
+link node['kzookeeper']['data_dir'] do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  mode '0750'
+  to node['kzookeeper']['data_volume']['data_dir']
 end
 
 template systemd_script do
@@ -147,7 +167,7 @@ if found_id == -1
   raise "Could not find matching IP address #{my_ip} in the list of zkd nodes: " + node['kzookeeper']['default']['private_ips'].join(",")
 end
 
-template "#{node['kzookeeper']['home']}/data/myid" do
+template "#{node['kzookeeper']['data_dir']}/myid" do
   source 'zookeeper.id.erb'
   owner node['kzookeeper']['user']
   group node['kzookeeper']['group']

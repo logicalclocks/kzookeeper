@@ -55,10 +55,18 @@ attribute "kzookeeper/default/public_ips",
           :description => "Set ip addresses",
           :type => "array"
 
-attribute "install/dir",
-          :description => "Set to a base directory under which we will install.",
+attribute "kzookeeper/superuser/username",
+          :description => "Jaas superuser username to authenticate with zookeeper (default: super)",
           :type => "string"
 
-attribute "install/user",
-          :description => "User to install the services as",
+attribute "kzookeeper/superuser/password",
+          :description => "Jaas superuser password to authenticate with zookeeper (default: adminpw)",
+          :type => "string"
+
+attribute "kzookeeper/kafka/username",
+          :description => "Jaas kafka username to authenticate with zookeeper (default: kafka)",
+          :type => "string"
+
+attribute "kzookeeper/kafka/password",
+          :description => "Jaas kafka password to authenticate with zookeeper (default: adminpw)",
           :type => "string"
