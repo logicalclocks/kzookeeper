@@ -118,6 +118,8 @@ bash 'Move kzookeeper data to data volume' do
   user 'root'
   code <<-EOH
     set -e
+    # Make sure zookeeper is stopped before moving the directory
+    systemctl stop zookeeper
     mv -f #{node['kzookeeper']['data_dir']}/* #{node['kzookeeper']['data_volume']['data_dir']}
     rm -rf #{node['kzookeeper']['data_dir']}
   EOH
