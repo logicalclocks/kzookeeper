@@ -37,7 +37,8 @@ default['kzookeeper']['config'] = {
   autopurge: {
     snapRetainCount: 1,
     purgeInterval: 1
-  }
+  },
+  "authProvider.1": "org.apache.zookeeper.server.auth.SASLAuthenticationProvider"
 }
 
 default['kzookeeper']['pid_file']                  = "#{node['kzookeeper']['base_dir']}/data/zookeeper_server.pid"

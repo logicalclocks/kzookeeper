@@ -35,10 +35,10 @@ kzookeeper_config config_path do
   action :render
 end
 
-template "#{node['kzookeeper']['conf_dir']}/jaas.config" do
-  source 'jaas.config.erb'
+template "#{node['kzookeeper']['conf_dir']}/jaas.conf" do
+  source 'jaas.conf.erb'
   owner node['kzookeeper']['user']
   group node['kzookeeper']['group']
   action :create
-  mode '0755'
+  mode '0750'
 end
