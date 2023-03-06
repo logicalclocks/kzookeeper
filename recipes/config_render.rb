@@ -16,6 +16,13 @@
 
 # set the config path based on default attributes
 
+directory node['kzookeeper']['conf_dir'] do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  mode "750"
+  action :create
+end
+
 zookeeper_fqdn = consul_helper.get_service_fqdn("zookeeper")
 zookeepers = []
 node['kzookeeper']['default']['private_ips'].each_with_index do |ipaddress, index|
