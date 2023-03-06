@@ -69,7 +69,11 @@ kzookeeper "#{node['kzookeeper']['version']}" do
   action      :install
 end
 
-zk_ip = private_recipe_ip("kzookeeper", "default")
+link node['kzookeeper']['base_dir'] do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  to node['kzookeeper']['home']
+end
 
 include_recipe "kzookeeper::config_render"
 
@@ -187,12 +191,6 @@ template "#{node['kzookeeper']['home']}/bin/zkConnect.sh" do
   mode '0755'
   variables({ :servers => node['kzookeeper']['servers']})
   notifies :restart, "service[#{service_name}]", :delayed
-end
-
-link node['kzookeeper']['base_dir'] do
-  owner node['kzookeeper']['user']
-  group node['kzookeeper']['group']
-  to node['kzookeeper']['home']
 end
 
 kagent_config service_name do
