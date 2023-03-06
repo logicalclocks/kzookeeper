@@ -24,7 +24,6 @@ def initialize(new_resource, run_context)
   @install_dir     = new_resource.install_dir
   @data_dir        = new_resource.data_dir
   @install_dir_res = zk_install_dir(@install_dir)
-  @data_dir_res    = zk_data_dir(@data_dir)
   @zk_source       = zk_source("zookeeper-#{@version}")
   @zk_install_cmd  = zk_install_command('install zookeeper')
 end
@@ -43,12 +42,6 @@ action :install do
   @install_dir_res.recursive(true)
   @install_dir_res.mode(00700)
   @install_dir_res.run_action(:create)
-
-  @data_dir_res.owner(@user)
-  @data_dir_res.group(@group)
-  @data_dir_res.recursive(true)
-  @data_dir_res.mode(00700)
-  @data_dir_res.run_action(:create)
 
   unless zk_installed?
     Chef::Log.info("Zookeeper version #{@version} not installed. Installing now!")
@@ -69,10 +62,6 @@ private
 
 def zk_source(path = '')
   Chef::ResourceResolver.resolve(:remote_file).new(path, @run_context)
-end
-
-def zk_data_dir(path = '')
-  Chef::ResourceResolver.resolve(:directory).new(path, @run_context)
 end
 
 def zk_install_dir(path = '')
