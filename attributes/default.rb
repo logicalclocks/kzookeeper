@@ -12,6 +12,7 @@ default['kzookeeper']['dir']                       = node['install']['dir'].empt
 default['kzookeeper']['install_dir']               = "#{node['kzookeeper']['dir']}/zookeeper"
 default['kzookeeper']['base_dir']                  = "#{node['kzookeeper']['install_dir']}/zookeeper"
 default['kzookeeper']['home']                      = "#{node['kzookeeper']['install_dir']}/zookeeper-#{node['kzookeeper']['version']}"
+default['kzookeeper']['bin_dir']                   = "#{node['kzookeeper']['base_dir']}/bin"
 default['kzookeeper']['data_dir']                  = "#{node['kzookeeper']['base_dir']}/data"
 default['kzookeeper']['conf_dir']                  = "#{node['kzookeeper']['base_dir']}/conf"
 

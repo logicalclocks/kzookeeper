@@ -222,3 +222,13 @@ bash 'check_node_status' do
        until #{node['kzookeeper']['install_dir']}/zookeeper/bin/zkServer.sh status; do sleep 1; done
   EOH
 end
+
+# This is idempotent and succeeds even if the node doesn't exists
+bash 'Delete Hive entries' do
+  user "root"
+  group "root"
+  code <<-EOH
+       #{node['kzookeeper']['bin_dir']}/zkCli.sh delete /hive_zookeeper_namespace
+  EOH
+  only_if { conda_helpers.is_upgrade }
+end
