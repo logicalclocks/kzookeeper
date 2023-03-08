@@ -1,0 +1,5 @@
+Server {
+       org.apache.zookeeper.server.auth.DigestLoginModule required
+       user_<%= node['kzookeeper']['superuser']['username'] %>="<%= node['kzookeeper']['superuser']['password'] %>"
+       user_<%= node['kzookeeper']['kafka']['username'] %>="<%= node['kzookeeper']['kafka']['password'] %>";
+};
