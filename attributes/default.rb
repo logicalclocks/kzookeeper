@@ -12,10 +12,11 @@ default['kzookeeper']['dir']                       = node['install']['dir'].empt
 default['kzookeeper']['install_dir']               = "#{node['kzookeeper']['dir']}/zookeeper"
 default['kzookeeper']['base_dir']                  = "#{node['kzookeeper']['install_dir']}/zookeeper"
 default['kzookeeper']['home']                      = "#{node['kzookeeper']['install_dir']}/zookeeper-#{node['kzookeeper']['version']}"
+default['kzookeeper']['data_dir']                  = "#{node['kzookeeper']['base_dir']}/data"
+default['kzookeeper']['conf_dir']                  = "#{node['kzookeeper']['base_dir']}/conf"
 
-
-default['kzookeeper']['default']['private_ips'] = ['10.0.2.15']
-
+default['kzookeeper']['data_volume']['root_dir']   = "#{node['data']['dir']}/zookeeper"
+default['kzookeeper']['data_volume']['data_dir']   = "#{node['kzookeeper']['data_volume']['root_dir']}/data"
 
 default['kzookeeper']['checksum']                  = '2e043e04c4da82fbdb38a68e585f3317535b3842c726e0993312948afcc83870'
 default['kzookeeper']['mirror']                    = node['download_url']
@@ -28,11 +29,26 @@ default['kzookeeper']['use_java_cookbook']         = true
 default['kzookeeper']['config'] = {
   clientPort: 2181,
   dataDir: "#{node['kzookeeper']['home']}/data", 
-  tickTime: 2000
+  tickTime: 2000,
+  syncLimit: 3,
+  initLimit: 60,
+  # unlimited number of IO connections, this might be set to a reasonable number
+  maxClientCnxns: 0,
+  autopurge: {
+    snapRetainCount: 1,
+    purgeInterval: 1
+  },
+  "authProvider.1": "org.apache.zookeeper.server.auth.SASLAuthenticationProvider"
 }
-
 
 default['kzookeeper']['pid_file']                  = "#{node['kzookeeper']['base_dir']}/data/zookeeper_server.pid"
 
+# Username/password authentication to setup ACLs
+# Currently using JAAS to authenticate clients, will switch to mTLS 
+# once we upgrade Kafka/Zookeeper
 
+default['kzookeeper']['superuser']['username']     = "super"
+default['kzookeeper']['superuser']['password']     = "adminpw"
 
+default['kzookeeper']['kafka']['username']     = "kafka"
+default['kzookeeper']['kafka']['password']     = "adminpw"

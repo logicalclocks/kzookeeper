@@ -1,7 +1,8 @@
 #!/bin/bash
 
 export JMXDISABLE=true
+export JVMFLAGS="-Djava.security.auth.login.config=<%= node['kzookeeper']['conf_dir'] %>/jaas.conf"
 
-cd <%= @zk_dir %>
+cd <%= node['kzookeeper']['home'] %>
 ./bin/zkServer.sh start 
 
