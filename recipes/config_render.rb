@@ -15,14 +15,37 @@
 # limitations under the License.
 
 # set the config path based on default attributes
-config_path = ::File.join(node['kzookeeper']['install_dir'],
-                          "zookeeper-#{node['kzookeeper']['version']}",
-                          'conf',
-                          'zoo.cfg')
+
+directory node['kzookeeper']['conf_dir'] do
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  mode "750"
+  action :create
+end
+
+zookeeper_fqdn = consul_helper.get_service_fqdn("zookeeper")
+zookeepers = []
+node['kzookeeper']['default']['private_ips'].each_with_index do |ipaddress, index|
+  id=index+1
+  node.override['kzookeeper']['config']["server.#{id}"]="#{id}.#{zookeeper_fqdn}:2888:3888"
+  zookeepers.push("#{id}.#{zookeeper_fqdn}")
+end
+
+node.override['kzookeeper']['servers'] = zookeepers
+
+config_path = ::File.join(node['kzookeeper']['conf_dir'], 'zoo.cfg')
 
 # render out our config
 kzookeeper_config config_path do
   config node['kzookeeper']['config']
   user   node['kzookeeper']['user']
   action :render
+end
+
+template "#{node['kzookeeper']['conf_dir']}/jaas.conf" do
+  source 'jaas.conf.erb'
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  action :create
+  mode '0750'
 end
