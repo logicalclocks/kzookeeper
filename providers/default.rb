@@ -44,11 +44,11 @@ action :install do
   @install_dir_res.run_action(:create)
 
   unless zk_installed?
-    Chef::Log.info("Zookeeper version #{@version} not installed. Installing now!")
     @zk_install_cmd.cwd(Chef::Config['file_cache_path'])
     @zk_install_cmd.command <<-eos
-tar -C #{@install_dir} -zxf zookeeper-#{@version}.tar.gz
-chown -R #{@user}:#{@group} #{@install_dir}
+      tar -C #{@install_dir} -zxf zookeeper-#{@version}.tar.gz
+      mv #{@install_dir}/apache-zookeeper-#{@version}-bin #{@install_dir}/zookeeper-#{@version}
+      chown -R #{@user}:#{@group} #{@install_dir}
     eos
     @zk_install_cmd.run_action(:run)
   end

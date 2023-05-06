@@ -19,7 +19,7 @@ default['kzookeeper']['data_volume']['root_dir']   = "#{node['data']['dir']}/zoo
 default['kzookeeper']['data_volume']['data_dir']   = "#{node['kzookeeper']['data_volume']['root_dir']}/data"
 
 default['kzookeeper']['download_url']              = "#{node['download_url']}/apache-zookeeper-#{node['kzookeeper']['version']}-bin.tar.gz"
-default['kzookeeper']['checksum']                  = '919936185857283ee73445695a9d4921bc9d6e5e03d97839b78ec0082513d7b9'
+default['kzookeeper']['checksum']                  = 'dedf166f9a5fb12240041385a74ec81ce9de63f2a49454883027cf6acae202a5'
 
 default['kzookeeper']['config'] = {
   clientPort: 2181,
