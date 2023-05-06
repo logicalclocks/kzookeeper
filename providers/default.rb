@@ -33,7 +33,7 @@ action :install do
   @zk_source.path(zk_download_path)
   @zk_source.owner('root')
   @zk_source.mode(00644)
-  @zk_source.source(zk_source_constructed)
+  @zk_source.source(@mirror)
   @zk_source.checksum(@checksum)
   @zk_source.run_action(:create)
 
@@ -74,10 +74,6 @@ end
 
 def zk_installed?
   ::File.exist?(::File.join(@install_dir, "zookeeper-#{@version}", "zookeeper-#{@version}.jar"))
-end
-
-def zk_source_constructed
-  ::File.join(@mirror, "zookeeper-#{@version}", "zookeeper-#{@version}.tar.gz")
 end
 
 def zk_download_path
