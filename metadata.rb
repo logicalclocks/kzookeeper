@@ -23,10 +23,6 @@ attribute "kzookeeper/version",
           :description => "Version of kzookeeper",
           :type => 'string'
 
-attribute "kzookeeper/url",
-          :description => "Url to download binaries for kzookeeper",
-          :type => 'string'
-
 attribute "kzookeeper/user",
           :description => "Run kzookeeper as this user",
           :type => 'string'
