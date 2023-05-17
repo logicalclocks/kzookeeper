@@ -62,7 +62,7 @@ include_recipe 'java'
 
 kzookeeper "#{node['kzookeeper']['version']}" do
   user        node['kzookeeper']['user']
-  mirror      node['kzookeeper']['mirror']
+  mirror      node['kzookeeper']['download_url']
   checksum    node['kzookeeper']['checksum']
   install_dir node['kzookeeper']['install_dir']
   data_dir    node['kzookeeper']['config']['dataDir']
