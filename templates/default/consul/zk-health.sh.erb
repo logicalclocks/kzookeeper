@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+<%= node['kzookeeper']['bin_dir'] %>/zookeeper-status.sh
+
+if [[ $? -eq 0 ]];
+then
+    exit 0
+fi
+exit 2
