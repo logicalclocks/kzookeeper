@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+i=0
+while true
+do
+    <%= node['kzookeeper']['bin_dir'] %>/zookeeper-status.sh
+    if [ $? -eq "0" ]
+    then
+        exit 0
+    fi
+    echo "ZooKeeper service is not running/healthy"
+    let i++
+    if [ $i -gt 100 ]
+    then
+        echo "Exhausted all retries"
+        exit 1
+    fi
+    sleep 2s
+done

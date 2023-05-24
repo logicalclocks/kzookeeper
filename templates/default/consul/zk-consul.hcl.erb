@@ -7,6 +7,14 @@ services = [
             "<%= @id %>"
         ]
         port = 2181
+        check = {
+            id = "zk-client-health"
+            name = "Health check for ZooKeeper"
+            args = ["<%= node['kzookeeper']['bin_dir'] %>/zk-health.sh"]
+            interval = "20s"
+            timeout = "20s"
+            status = "passing"
+        }
     },
     {
         id = "peer"
@@ -16,6 +24,10 @@ services = [
             "<%= @id %>"
         ]
         port = 2888
+        check = {
+            id = "zk-peer-health"
+            alias_service = "client"
+        }
     },
     {
         id = "leader"
@@ -25,5 +37,9 @@ services = [
             "<%= @id %>"
         ]
         port = 3888
+        check = {
+            id = "zk-leader-health"
+            alias_service = "client"
+        }
     }
 ]

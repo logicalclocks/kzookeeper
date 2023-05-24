@@ -17,9 +17,19 @@ end
 
 group node['kzookeeper']['group'] do
   action :modify
-  members ["#{node['kzookeeper']['user']}"]
+  members ["#{node['kzookeeper']['user']}", "#{node['consul']['user']}"]
   append true
   not_if { node['install']['external_users'].casecmp("true") == 0 }
+  notifies :restart, 'systemd_unit[consul.service]', :immediately
+end
+
+# This resource is called by the resource above. We have to restart
+# consul to pick up the new group. It has to be member of zookeeper
+# group to be able to invoke the health scripts
+# Rolling restart is protected by the parallelism of
+# kzookeeper:default recipe
+systemd_unit "consul.service" do
+  action :nothing
 end
 
 directory "#{node['kzookeeper']['dir']}" do
@@ -80,28 +90,39 @@ include_recipe "kzookeeper::config_render"
 template "#{node['kzookeeper']['home']}/bin/zookeeper-start.sh" do
   source "zookeeper-start.sh.erb"
   owner node['kzookeeper']['user']
-  group node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   mode 0770
 end
 
-template "#{node['kzookeeper']['home']}/bin/zookeeper-stop.sh" do
+template "#{node['kzookeeper']['bin_dir']}/zookeeper-stop.sh" do
   source "zookeeper-stop.sh.erb"
   owner node['kzookeeper']['user']
-  group node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   mode 0770
   variables({
               :zk_dir => node['kzookeeper']['home']
             })
 end
 
-template "#{node['kzookeeper']['home']}/bin/zookeeper-status.sh" do
+template "#{node['kzookeeper']['bin_dir']}/zookeeper-status.sh" do
   source "zookeeper-status.sh.erb"
   owner node['kzookeeper']['user']
-  group node['kzookeeper']['user']
+  group node['kzookeeper']['group']
   mode 0770
-  variables({
-              :zk_dir => node['kzookeeper']['home']
-            })
+end
+
+template "#{node['kzookeeper']['bin_dir']}/zk-health.sh" do
+  source "consul/zk-health.sh.erb"
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  mode 0750
+end
+
+template "#{node['kzookeeper']['bin_dir']}/waiter.sh" do
+  source "waiter.sh.erb"
+  owner node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  mode 0750
 end
 
 directory "#{node['kzookeeper']['data_volume']['root_dir']}" do
@@ -212,14 +233,12 @@ consul_service "Registering ZooKeeper with Consul" do
   action :register
 end
 
-# Wait until node was joined the cluster. The "zkServer.sh status" command exits with "1" if the node is not
-# connected to the cluster, otherwise it exits with "0"
-bash 'check_node_status' do
-  user "root"
-  group "root"
-  timeout 240
+bash 'wait-for-zookeeper' do
+  user node['kzookeeper']['user']
+  group node['kzookeeper']['group']
+  timeout 250
   code <<-EOH
-       until #{node['kzookeeper']['install_dir']}/zookeeper/bin/zkServer.sh status; do sleep 1; done
+      #{node['kzookeeper']['bin_dir']}/waiter.sh
   EOH
 end
 
