@@ -10,7 +10,7 @@ do
     fi
     echo "ZooKeeper service is not running/healthy"
     let i++
-    if [ $i -gt 100 ]
+    if [ $i -gt 900 ]
     then
         echo "Exhausted all retries"
         exit 1
