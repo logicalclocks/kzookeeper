@@ -236,7 +236,7 @@ end
 bash 'wait-for-zookeeper' do
   user node['kzookeeper']['user']
   group node['kzookeeper']['group']
-  timeout 250
+  timeout 1810
   code <<-EOH
       #{node['kzookeeper']['bin_dir']}/waiter.sh
   EOH
