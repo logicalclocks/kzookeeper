@@ -240,6 +240,7 @@ bash 'wait-for-zookeeper' do
   code <<-EOH
       #{node['kzookeeper']['bin_dir']}/waiter.sh
   EOH
+  only_if { conda_helpers.is_upgrade }
 end
 
 # This is idempotent and succeeds even if the node doesn't exists
