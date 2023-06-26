@@ -248,7 +248,12 @@ bash 'Delete Hive entries' do
   user "root"
   group "root"
   code <<-EOH
-       #{node['kzookeeper']['bin_dir']}/zkCli.sh delete /hive_zookeeper_namespace
+       set +e
+       #{node['kzookeeper']['bin_dir']}/zkCli.sh get /hive_zookeeper_namespace
+       if [ $? -eq 0 ]; then
+         set -e
+         #{node['kzookeeper']['bin_dir']}/zkCli.sh delete /hive_zookeeper_namespace
+       fi
   EOH
   only_if { conda_helpers.is_upgrade }
 end
