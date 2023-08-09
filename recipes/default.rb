@@ -17,19 +17,9 @@ end
 
 group node['kzookeeper']['group'] do
   action :modify
-  members ["#{node['kzookeeper']['user']}", "#{node['consul']['user']}"]
+  members ["#{node['kzookeeper']['user']}"]
   append true
   not_if { node['install']['external_users'].casecmp("true") == 0 }
-  notifies :restart, 'systemd_unit[consul.service]', :immediately
-end
-
-# This resource is called by the resource above. We have to restart
-# consul to pick up the new group. It has to be member of zookeeper
-# group to be able to invoke the health scripts
-# Rolling restart is protected by the parallelism of
-# kzookeeper:default recipe
-systemd_unit "consul.service" do
-  action :nothing
 end
 
 directory "#{node['kzookeeper']['dir']}" do
@@ -109,13 +99,6 @@ template "#{node['kzookeeper']['bin_dir']}/zookeeper-status.sh" do
   owner node['kzookeeper']['user']
   group node['kzookeeper']['group']
   mode 0770
-end
-
-template "#{node['kzookeeper']['bin_dir']}/zk-health.sh" do
-  source "consul/zk-health.sh.erb"
-  owner node['kzookeeper']['user']
-  group node['kzookeeper']['group']
-  mode 0750
 end
 
 template "#{node['kzookeeper']['bin_dir']}/waiter.sh" do
