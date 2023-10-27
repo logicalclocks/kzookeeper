@@ -1,6 +1,6 @@
 include_attribute "kagent"
 
-default['kzookeeper']['version']                   = '3.7.1'
+default['kzookeeper']['version']                   = '3.7.2'
 default['kzookeeper']['user']                      = node['install']['user'].empty? ? "zookeeper" : node['install']['user']
 default['kzookeeper']['user_id']                   = '1520'
 default['kzookeeper']['group']                     = node['install']['user'].empty? ? "zookeeper" : node['install']['user']
@@ -19,7 +19,7 @@ default['kzookeeper']['data_volume']['root_dir']   = "#{node['data']['dir']}/zoo
 default['kzookeeper']['data_volume']['data_dir']   = "#{node['kzookeeper']['data_volume']['root_dir']}/data"
 
 default['kzookeeper']['download_url']              = "#{node['download_url']}/apache-zookeeper-#{node['kzookeeper']['version']}-bin.tar.gz"
-default['kzookeeper']['checksum']                  = 'dedf166f9a5fb12240041385a74ec81ce9de63f2a49454883027cf6acae202a5'
+default['kzookeeper']['checksum']                  = '6c43d8089561c3b4ba04c4e0a6dca3d04d84cc138d4895334a7516dfb3e99f28'
 
 default['kzookeeper']['config'] = {
   clientPort: 2181,
