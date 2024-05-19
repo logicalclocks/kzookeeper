@@ -43,6 +43,10 @@ attribute "kzookeeper/dir",
           :description => "Base directory to install zookeeper (default: /opt)",
           :type => 'string'
 
+attribute "kzookeeper/heap",
+          :description => "Zookeeper server heap size (Default: 1000)",
+          :type => 'string'
+
 attribute "kzookeeper/default/private_ips",
           :description => "Set ip addresses",
           :type => "array"

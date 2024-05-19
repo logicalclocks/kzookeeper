@@ -20,6 +20,7 @@ default['kzookeeper']['data_volume']['data_dir']   = "#{node['kzookeeper']['data
 
 default['kzookeeper']['download_url']              = "#{node['download_url']}/apache-zookeeper-#{node['kzookeeper']['version']}-bin.tar.gz"
 default['kzookeeper']['checksum']                  = '6c43d8089561c3b4ba04c4e0a6dca3d04d84cc138d4895334a7516dfb3e99f28'
+default['kzookeeper']['heap']                      = '1000'
 
 default['kzookeeper']['config'] = {
   clientPort: 2181,
