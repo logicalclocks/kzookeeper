@@ -2,6 +2,7 @@
 
 export JMXDISABLE=true
 export JVMFLAGS="-Djdk.tls.ephemeralDHKeySize=2048 -Djava.security.auth.login.config=<%= node['kzookeeper']['conf_dir'] %>/jaas.conf"
+export ZK_SERVER_HEAP="<%= node['kzookeeper']['heap'] %>"
 
 cd <%= node['kzookeeper']['home'] %>
 ./bin/zkServer.sh start 
